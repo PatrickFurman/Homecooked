@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "880397930628",
+    "firebase_url": "https://homecooked-database.firebaseio.com",
+    "project_id": "homecooked-database",
+    "storage_bucket": "homecooked-database.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:880397930628:android:01bdeb77e0305d5f",
+        "android_client_info": {
+          "package_name": "com.homcooked.homecooked"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "880397930628-lmm9a636a804h494n1c9ddoret54t6or.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.homcooked.homecooked",
+            "certificate_hash": "564312845f9e0b7897553e2990dab2269d0b1c88"
+          }
+        },
+        {
+          "client_id": "880397930628-4g3i1um47lle1vt66lhaq3j70v0842hv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOnjeoKAFUYC2oLZ3YS-AIYPSTPCBWvZ8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "880397930628-4g3i1um47lle1vt66lhaq3j70v0842hv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
