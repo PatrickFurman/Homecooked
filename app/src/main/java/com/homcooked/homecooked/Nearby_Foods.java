@@ -19,27 +19,11 @@ public class Nearby_Foods extends AppCompatActivity {
             @Override
             public void onClick (View view) {
                 Intent intent = new Intent(view.getContext(), view_food_details.class);
-                intent.putExtra("Food title here", "Food description here");
+                intent.putExtra("Jellyfish", "Food description here");
                 startActivity(intent);
             }
         });
         findViewById(R.id.vegetarian_picture).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick (View view) {
-                Intent intent = new Intent(view.getContext(), view_food_details.class);
-                intent.putExtra("Food title here", "Food description here");
-                startActivity(intent);
-            }
-        });
-        findViewById(R.id.jellyfish_description).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick (View view) {
-                Intent intent = new Intent(view.getContext(), view_food_details.class);
-                intent.putExtra("Food title here", "Food description here");
-                startActivity(intent);
-            }
-        });
-        findViewById(R.id.vegetarian_description).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View view) {
                 Intent intent = new Intent(view.getContext(), view_food_details.class);

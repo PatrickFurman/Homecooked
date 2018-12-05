@@ -14,7 +14,6 @@ public class User {
         this.email = email;
         this.password = password;
         this.usersRef = usersRef;
-        userID = "1"; // change to equal usersRef.child("Users").numOfUsers;
     }
 
     public String getName() {
@@ -30,4 +29,8 @@ public class User {
     }
 
     public String getUserID() {return userID; }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
 }
