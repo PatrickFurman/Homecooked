@@ -3,21 +3,24 @@ package com.homcooked.homecooked;
 import com.google.firebase.database.DatabaseReference;
 
 public class User {
-    private String name;
+    private String username;
+    private String firstName;
+    private String lastName;
     private String email;
     private String password;
     private String userID;
-    DatabaseReference usersRef;
 
-    public User(String name, String email, String password, DatabaseReference usersRef) {
-        this.name = name;
+    public User(String name, String firstName, String lastName, String email,
+                String password) {
+        this.username = name;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.email = email;
         this.password = password;
-        this.usersRef = usersRef;
     }
 
     public String getName() {
-        return name;
+        return username;
     }
 
     public String getEmail() {
