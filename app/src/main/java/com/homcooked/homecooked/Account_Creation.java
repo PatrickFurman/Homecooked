@@ -47,23 +47,16 @@ public class Account_Creation extends AppCompatActivity {
                 email = editText.getText().toString();
                 if (!password.equals(password2)) {
                    findViewById(R.id.Password_Input).setSelected(true); // check what this does
-                    Toast.makeText(getApplicationContext(),"Passwords do not match",Toast.LENGTH_LONG).show();
-                }
-                else if(password.equals(null) || password2.equals(null) || username.equals(null) || email.equals(null)
-                        || firstName.equals(null) || lastName.equals(null)) {
-                    Toast.makeText(getApplicationContext(),"Please complete all fields",Toast.LENGTH_LONG).show();
+                   Toast.makeText(getApplicationContext(),"Passwords do not match",Toast.LENGTH_LONG).show();
+                } else if (email.contains("@") && email.contains(".")) {
+                    Toast.makeText(getApplicationContext(), "Please enter a valid email", Toast.LENGTH_LONG).show();
+                } else if (password.length() < 8 || firstName.length() < 1 || lastName.length() < 1 || username.length() < 1) {
+                    Toast.makeText(getApplicationContext(), "Invalid length of field", Toast.LENGTH_LONG).show();
                 } else {
-                    createNewUser();
+                    User user = new User(username, firstName, lastName, email, password);
+                    usersRef.child(user.getName()).setValue(user);
                 }
             }
         });
-    }
-    private void createNewUser() {
-        User user = new User(username, firstName, lastName, email, password);
-
-        // probably a better way to set new user than getting ID after making user then remaking
-        usersRef.child("Users").child(user.getName()).setValue(user); // won't work if duplicate names
-        user.setUserID(usersRef.child("Users").child(user.getName()).getKey());
-        usersRef.child("Users").child(user.getName()).setValue(user);
     }
 }
