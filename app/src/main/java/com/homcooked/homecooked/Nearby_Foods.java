@@ -1,9 +1,11 @@
 package com.homcooked.homecooked;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -26,18 +28,18 @@ public class Nearby_Foods extends AppCompatActivity {
 
     protected void onStart() {
         super.onStart();
-        /*
-        foodsRef.orderByChild("ZipCode").equalTo(zipCode).addValueEventListener(new ValueEventListener() {
+        Query query = foodsRef.orderByChild("ZipCode").equalTo(zipCode).limitToFirst(2);
+        query.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
-                System.out.println(dataSnapshot.getKey());
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // set description in xml to show the new snapshot
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(getApplicationContext(), "Error: " + databaseError.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
-        */
     }
 }
+
