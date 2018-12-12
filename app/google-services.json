@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "880397930628-vtq85r2tpl5ele21khltgqg0ip9ovc3a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.homcooked.homecooked",
+            "certificate_hash": "a3e8f6d9f89459c71ee9a290bc6e51d2cd60c452"
+          }
+        },
+        {
           "client_id": "880397930628-4g3i1um47lle1vt66lhaq3j70v0842hv.apps.googleusercontent.com",
           "client_type": 3
         }

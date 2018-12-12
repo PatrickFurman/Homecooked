@@ -1,7 +1,5 @@
 package com.homcooked.homecooked;
 
-import com.google.firebase.database.DatabaseReference;
-
 public class User {
     private String username;
     private String firstName;
