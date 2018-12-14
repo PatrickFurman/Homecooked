@@ -20,7 +20,7 @@
         android:text="Loading..." />
 
     <TextView
-        android:id="@+id/food3TextText"
+        android:id="@+id/food3Text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"

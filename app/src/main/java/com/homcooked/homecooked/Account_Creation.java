@@ -1,17 +1,11 @@
 package com.homcooked.homecooked;
 
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -53,6 +47,8 @@ public class Account_Creation extends AppCompatActivity {
                 username = editText.getText().toString();
                 editText = findViewById(R.id.Email_Input);
                 email = editText.getText().toString();
+
+                // Verifying valid user input
                 if (!password.equals(password2)) {
                    findViewById(R.id.Password_Input).setSelected(true); // check what this does
                    Toast.makeText(getApplicationContext(),"Passwords do not match",Toast.LENGTH_LONG).show();
@@ -61,6 +57,7 @@ public class Account_Creation extends AppCompatActivity {
                 } else if (password.length() < 8 || firstName.length() < 1 || lastName.length() < 1 || username.length() < 1) {
                     Toast.makeText(getApplicationContext(), "Invalid length of field", Toast.LENGTH_LONG).show();
                 } else {
+                    // Creating new user object with all data and Firebase user with just email and password
                     User user = new User(username, firstName, lastName, email, password);
                     usersRef.child(user.getName()).setValue(user);
                     auth.createUserWithEmailAndPassword(email, password);
