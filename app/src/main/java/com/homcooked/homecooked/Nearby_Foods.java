@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -14,13 +16,28 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Scanner;
 
 public class Nearby_Foods extends AppCompatActivity {
-    DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-    DatabaseReference foodsRef = rootRef.child("Foods");
-    int zipCode = 98112; // make current user's zipcode
+    private DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+    private DatabaseReference foodsRef = rootRef.child("Foods");
+    int zipCode = 98112; // Set to current user's zipcode
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nearby__foods);
+        String userEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        // User userEmail to find connected user info and get their zipcode
+        Query query = rootRef.child("Users").child("Email").equalTo(userEmail);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                zipCode = (int) dataSnapshot.getValue();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(getApplicationContext(), "Error: " + databaseError.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+
     }
 
     protected void onStart() {
@@ -38,11 +55,6 @@ public class Nearby_Foods extends AppCompatActivity {
                 food2View.setText(s.nextLine());
                 TextView food3View = findViewById(R.id.food3Text);
                 food3View.setText(s.nextLine());
-                // For testing
-                while (s.hasNext()) {
-                    System.out.println(s.nextLine());
-                }
-                // End of testing 
             }
 
             @Override
