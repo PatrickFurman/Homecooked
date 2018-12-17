@@ -23,21 +23,23 @@ public class Nearby_Foods extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nearby__foods);
-        String userEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-        // User userEmail to find connected user info and get their zipcode
-        Query query = rootRef.child("Users").child("Email").equalTo(userEmail);
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                zipCode = (int) dataSnapshot.getValue();
-            }
+        try {
+            String userEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+            Query query = rootRef.child("Users").child("Email").equalTo(userEmail);
+            query.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    zipCode = (int) dataSnapshot.getValue();
+                }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(getApplicationContext(), "Error: " + databaseError.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Toast.makeText(getApplicationContext(), "Error: " + databaseError.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+        } catch(NullPointerException e) {
+            Toast.makeText(getApplicationContext(), "Couldn't find user", Toast.LENGTH_LONG).show();
+        }
     }
 
     protected void onStart() {
