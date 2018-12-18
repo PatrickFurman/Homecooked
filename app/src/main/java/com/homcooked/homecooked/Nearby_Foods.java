@@ -24,6 +24,7 @@ public class Nearby_Foods extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nearby__foods);
         try {
+            // pretty sure this is reading the email as being the zipcode - want to read associated user's zipCode
             String userEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
             Query query = rootRef.child("Users").child("Email").equalTo(userEmail);
             query.addValueEventListener(new ValueEventListener() {
