@@ -23,6 +23,7 @@ public class Nearby_Foods extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nearby__foods);
+        /*
         try {
             String userEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
             Query query = rootRef.child("Users").child("Email").equalTo(userEmail);
@@ -40,6 +41,7 @@ public class Nearby_Foods extends AppCompatActivity {
         } catch(NullPointerException e) {
             Toast.makeText(getApplicationContext(), "Couldn't find user", Toast.LENGTH_LONG).show();
         }
+        */
     }
 
     protected void onStart() {
@@ -50,13 +52,15 @@ public class Nearby_Foods extends AppCompatActivity {
             @Override
             // Scans the string version of the data and fills in textviews with results
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Scanner s = new Scanner(dataSnapshot.toString());
+                // Scanner s = new Scanner(dataSnapshot.toString());
                 TextView food1View = findViewById(R.id.food1Text);
-                food1View.setText(s.nextLine());
+                food1View.setText(dataSnapshot.toString());
+                /*
                 TextView food2View = findViewById(R.id.food2Text);
                 food2View.setText(s.nextLine());
                 TextView food3View = findViewById(R.id.food3Text);
                 food3View.setText(s.nextLine());
+                */
             }
 
             @Override
