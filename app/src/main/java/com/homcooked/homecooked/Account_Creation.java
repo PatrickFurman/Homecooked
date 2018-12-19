@@ -12,7 +12,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class Account_Creation extends AppCompatActivity {
-    // Creating references to database
     private DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
     private DatabaseReference usersRef = rootRef.child("Users");
     private FirebaseAuth auth;
