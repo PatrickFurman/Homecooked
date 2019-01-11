@@ -1,15 +1,23 @@
 package com.homcooked.homecooked;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
 public class Account_Creation extends AppCompatActivity {
     private DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
@@ -52,16 +60,40 @@ public class Account_Creation extends AppCompatActivity {
                 // Verifying valid user input
                 if (!password.equals(password2)) {
                    findViewById(R.id.Password_Input).setSelected(true); // check what this does
-                   Toast.makeText(getApplicationContext(),"Passwords do not match",Toast.LENGTH_LONG).show();
+                   Toast.makeText(getApplicationContext(),"Passwords do not match",
+                           Toast.LENGTH_LONG).show();
                 } else if (!email.contains("@") || !email.contains(".")) {
-                    Toast.makeText(getApplicationContext(), "Please enter a valid email", Toast.LENGTH_LONG).show();
-                } else if (password.length() < 8 || firstName.length() < 1 || lastName.length() < 1 || username.length() < 1) {
-                    Toast.makeText(getApplicationContext(), "Invalid length of field", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Please enter a valid email",
+                            Toast.LENGTH_LONG).show();
+                } else if (password.length() < 8 || firstName.length() < 1 ||
+                        lastName.length() < 1 || username.length() < 1) {
+                    Toast.makeText(getApplicationContext(), "Invalid length of field",
+                            Toast.LENGTH_LONG).show();
                 } else {
                     // Creating new user object with all data and Firebase user with just email and password
                     User user = new User(username, firstName, lastName, email, password);
                     usersRef.child(user.getName()).setValue(user);
-                    auth.createUserWithEmailAndPassword(email, password);
+                    auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(
+                            new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (!task.isSuccessful()) {
+                                try {
+                                    throw task.getException();
+                                } catch (FirebaseAuthWeakPasswordException weakPassword) {
+                                    Toast.makeText(getApplicationContext(), weakPassword.getReason(),
+                                            Toast.LENGTH_LONG).show();
+                                    // need to figure out what the requirements are and put in layout
+                                } catch (FirebaseAuthUserCollisionException existingEmail) {
+                                    Toast.makeText(getApplicationContext(), "User already exists",
+                                            Toast.LENGTH_LONG).show();
+                                } catch (Exception e) {
+                                    Toast.makeText(getApplicationContext(), e.getMessage(),
+                                            Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        }
+                    });
                     startNearbyFoods();
                 }
             }

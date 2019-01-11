@@ -1,12 +1,18 @@
 package com.homcooked.homecooked;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.location.LocationServices;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -16,58 +22,59 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Scanner;
 
 public class Nearby_Foods extends AppCompatActivity {
+    private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
     private DatabaseReference foodsRef = rootRef.child("Foods");
-    int zipCode = 98112; // Set to current user's zipcode
+    double latitude;
+    double longitude;
+    private FusedLocationProviderClient mFusedLocationClient;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nearby__foods);
-        /*
-        try {
-            // pretty sure this is reading the email as being the zipcode - want to read associated user's zipCode
-            String userEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-            Query query = rootRef.child("Users").child("Email").equalTo(userEmail);
-            query.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    zipCode = (int) dataSnapshot.getValue();
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                    Toast.makeText(getApplicationContext(), "Error: " + databaseError.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            });
-        } catch(NullPointerException e) {
-            Toast.makeText(getApplicationContext(), "Couldn't find user", Toast.LENGTH_LONG).show();
+        if(ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+        {
+            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+            mFusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            // Got last known location. In some rare situations this can be null.
+                            if (location != null) {
+                                Toast.makeText(getApplicationContext(), "Couldn't find location, " +
+                                        "make sure location services are turned on", Toast.LENGTH_LONG).show();
+                            } else {
+                                latitude = location.getLatitude();
+                                longitude = location.getLongitude();
+                            }
+                        }
+                    });
         }
-        */
     }
 
     protected void onStart() {
         super.onStart();
-        // Queries the first 3 foods in database with the same zipcode to user
-        Query query = foodsRef.orderByChild("ZipCode").equalTo(zipCode).limitToFirst(3);
+        Query firstQuery = foodsRef.startAt(latitude - 10).endAt(latitude + 10);
+        Query query = firstQuery.startAt(longitude - 10).endAt(longitude + 10);
         query.addValueEventListener(new ValueEventListener() {
             @Override
             // Scans the string version of the data and fills in textviews with results
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // Scanner s = new Scanner(dataSnapshot.toString());
+                Scanner s = new Scanner(dataSnapshot.toString());
                 TextView food1View = findViewById(R.id.food1Text);
-                food1View.setText(dataSnapshot.toString());
-                /*
+                food1View.setText(s.next());
                 TextView food2View = findViewById(R.id.food2Text);
-                food2View.setText(s.nextLine());
+                food2View.setText(s.next());
                 TextView food3View = findViewById(R.id.food3Text);
-                food3View.setText(s.nextLine());
-                */
+                food3View.setText(s.next());
             }
 
             @Override
             // Displaying error message if necessary
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(getApplicationContext(), "Error: " + databaseError.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Error: " +
+                        databaseError.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
