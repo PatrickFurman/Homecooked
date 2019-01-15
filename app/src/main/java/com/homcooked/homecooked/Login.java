@@ -17,14 +17,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.homcooked.homecooked.Nearby_Foods;
-import com.homcooked.homecooked.R;
 
-public class Login extends AppCompatActivity {
+public class Login extends AppCompatActivity implements View.OnClickListener {
 
-    private EditText Name;
-    private EditText Password;
-    private Button btnLogin;
+    EditText Name;
+    EditText Password;
+    Button btnLogin;
     private FirebaseAuth mAuth;
     ProgressDialog dialog;
 
@@ -33,27 +31,29 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        //Firebase
-        dialog = new ProgressDialog(this);
-        mAuth = FirebaseAuth.getInstance();
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user != null){
-            Toast.makeText(getApplicationContext(), "User already signed in", Toast.LENGTH_LONG).show();
-        }
-
         Name = findViewById(R.id.etName);
         Password = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.btnLogin);
 
-        final String userName = Name.getText().toString();
-        final String userPassword = Password.getText().toString();
+        btnLogin.setOnClickListener(this);
+        dialog = new ProgressDialog(this);
+        mAuth = FirebaseAuth.getInstance();
+    }
 
-        if(TextUtils.isEmpty(userName)){
-            Toast.makeText(getApplicationContext(), "Enter email address", Toast.LENGTH_SHORT).show();
+    @Override
+    public void onClick(View view) {
+        if(view.getId() == R.id.btnLogin) {
+            loginUser(Name.getText().toString(), Password.getText().toString());
         }
-        if(TextUtils.isEmpty(userPassword)){
-            Toast.makeText(getApplicationContext(), "Enter password",Toast.LENGTH_SHORT).show();
-        }
+    }
+
+    private void loginUser(String userName, String userPassword){
+//    if(TextUtils.isEmpty(userName)){
+//        Toast.makeText(getApplicationContext(), "Enter email address", Toast.LENGTH_SHORT).show();
+//    }
+//        if(TextUtils.isEmpty(userPassword)){
+//        Toast.makeText(getApplicationContext(), "Enter password",Toast.LENGTH_SHORT).show();
+//    }
 
         mAuth.signInWithEmailAndPassword(userName, userPassword)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -62,11 +62,11 @@ public class Login extends AppCompatActivity {
                         dialog.dismiss();
                         if (task.isSuccessful()) {
                             Toast.makeText(getApplicationContext(), "Signing in", Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(Login.this, Nearby_Foods.class); // change to main activity
+                            Intent intent = new Intent(Login.this, Nearby_Foods.class);
                             startActivity(intent);
                             finish();
                         } else {
-                            Toast.makeText(getApplicationContext(), "Authentication failed.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Wrong email or password.", Toast.LENGTH_SHORT).show();
                         }
                     }
 
