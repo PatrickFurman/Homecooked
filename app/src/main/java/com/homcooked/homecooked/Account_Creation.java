@@ -14,10 +14,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 
 public class Account_Creation extends AppCompatActivity {
     private DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
@@ -59,9 +57,9 @@ public class Account_Creation extends AppCompatActivity {
 
                 // Verifying valid user input
                 if (!password.equals(password2)) {
-                   findViewById(R.id.Password_Input).setSelected(true); // check what this does
-                   Toast.makeText(getApplicationContext(),"Passwords do not match",
-                           Toast.LENGTH_LONG).show();
+                    findViewById(R.id.Password_Input).setSelected(true); // check what this does
+                    Toast.makeText(getApplicationContext(),"Passwords do not match",
+                            Toast.LENGTH_LONG).show();
                 } else if (!email.contains("@") || !email.contains(".")) {
                     Toast.makeText(getApplicationContext(), "Please enter a valid email",
                             Toast.LENGTH_LONG).show();
@@ -75,25 +73,25 @@ public class Account_Creation extends AppCompatActivity {
                     usersRef.child(user.getName()).setValue(user);
                     auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(
                             new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (!task.isSuccessful()) {
-                                try {
-                                    throw task.getException();
-                                } catch (FirebaseAuthWeakPasswordException weakPassword) {
-                                    Toast.makeText(getApplicationContext(), weakPassword.getReason(),
-                                            Toast.LENGTH_LONG).show();
-                                    // need to figure out what the requirements are and put in layout
-                                } catch (FirebaseAuthUserCollisionException existingEmail) {
-                                    Toast.makeText(getApplicationContext(), "User already exists",
-                                            Toast.LENGTH_LONG).show();
-                                } catch (Exception e) {
-                                    Toast.makeText(getApplicationContext(), e.getMessage(),
-                                            Toast.LENGTH_LONG).show();
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (!task.isSuccessful()) {
+                                        try {
+                                            throw task.getException();
+                                        } catch (FirebaseAuthWeakPasswordException weakPassword) {
+                                            Toast.makeText(getApplicationContext(), weakPassword.getReason(),
+                                                    Toast.LENGTH_LONG).show();
+                                            // need to figure out what the requirements are and put in layout
+                                        } catch (FirebaseAuthUserCollisionException existingEmail) {
+                                            Toast.makeText(getApplicationContext(), "User already exists",
+                                                    Toast.LENGTH_LONG).show();
+                                        } catch (Exception e) {
+                                            Toast.makeText(getApplicationContext(), e.getMessage(),
+                                                    Toast.LENGTH_LONG).show();
+                                        }
+                                    }
                                 }
-                            }
-                        }
-                    });
+                            });
                     startNearbyFoods();
                 }
             }

@@ -19,10 +19,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import java.util.Scanner;
 
 public class Nearby_Foods extends AppCompatActivity {
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
+    private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
     private DatabaseReference foodsRef = rootRef.child("Foods");
     double latitude;
@@ -33,41 +33,41 @@ public class Nearby_Foods extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nearby__foods);
         if(ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-        {
-            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-            mFusedLocationClient.getLastLocation()
-                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location location) {
-                            // Got last known location. In some rare situations this can be null.
-                            if (location != null) {
-                                Toast.makeText(getApplicationContext(), "Couldn't find location, " +
-                                        "make sure location services are turned on", Toast.LENGTH_LONG).show();
-                            } else {
-                                latitude = location.getLatitude();
-                                longitude = location.getLongitude();
+                COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                        FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            try {
+                mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+                mFusedLocationClient.getLastLocation()
+                        .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                            @Override
+                            public void onSuccess(Location location) {
+                                // Got last known location. In some rare situations this can be null.
+                                if (location != null) {
+                                    latitude = location.getLatitude();
+                                    longitude = location.getLongitude();
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "Couldn't find location, " +
+                                            "make sure location services are turned on", Toast.LENGTH_LONG).show();
+                                }
                             }
-                        }
-                    });
+                        });
+            } catch (Exception e) {
+                Toast.makeText(getApplicationContext(), "Error" + e.getMessage(), Toast.LENGTH_LONG).show();
+            }
         }
     }
 
     protected void onStart() {
         super.onStart();
-        Query firstQuery = foodsRef.startAt(latitude - 10).endAt(latitude + 10);
-        Query query = firstQuery.startAt(longitude - 10).endAt(longitude + 10);
+        Query query = foodsRef.startAt(latitude - 10).endAt(latitude + 10);
         query.addValueEventListener(new ValueEventListener() {
             @Override
-            // Scans the string version of the data and fills in textviews with results
+            // Scans the string version of the data and fills in TextViews with results
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Scanner s = new Scanner(dataSnapshot.toString());
+                Food_Item food = dataSnapshot.getValue(Food_Item.class); // need to make data stored as an object
                 TextView food1View = findViewById(R.id.food1Text);
-                food1View.setText(s.next());
-                TextView food2View = findViewById(R.id.food2Text);
-                food2View.setText(s.next());
-                TextView food3View = findViewById(R.id.food3Text);
-                food3View.setText(s.next());
+                food1View.setText(food.getDescription());
             }
 
             @Override
@@ -79,4 +79,3 @@ public class Nearby_Foods extends AppCompatActivity {
         });
     }
 }
-
