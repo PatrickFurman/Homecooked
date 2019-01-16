@@ -23,6 +23,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     EditText Name;
     EditText Password;
     Button btnLogin;
+    Button btnSignUp;
     private FirebaseAuth mAuth;
     ProgressDialog dialog;
 
@@ -34,8 +35,10 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         Name = findViewById(R.id.etName);
         Password = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.btnLogin);
+        btnSignUp = findViewById(R.id.btnSignUp);
 
         btnLogin.setOnClickListener(this);
+        btnSignUp.setOnClickListener(this);
         dialog = new ProgressDialog(this);
         mAuth = FirebaseAuth.getInstance();
     }
@@ -44,6 +47,10 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     public void onClick(View view) {
         if(view.getId() == R.id.btnLogin) {
             loginUser(Name.getText().toString(), Password.getText().toString());
+        }
+        if(view.getId() == R.id.btnSignUp){
+            Intent intent = new Intent(Login.this, Account_Creation.class);
+            startActivity(intent);
         }
     }
 
@@ -62,9 +69,9 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                         dialog.dismiss();
                         if (task.isSuccessful()) {
                             Toast.makeText(getApplicationContext(), "Signing in", Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(Login.this, Nearby_Foods.class);
+                            Intent intent = new Intent(Login.this, Account_Creation.class);
                             startActivity(intent);
-                            finish();
+                            //finish();
                         } else {
                             Toast.makeText(getApplicationContext(), "Wrong email or password.", Toast.LENGTH_SHORT).show();
                         }
