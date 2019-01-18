@@ -17,15 +17,14 @@ import com.google.firebase.storage.StorageReference;
 
 public class view_food_details extends AppCompatActivity {
     StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+    // getting views from layout
+    TextView food_description = findViewById(R.id.post_description);
+    ImageView food_image = findViewById(R.id.post_image);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_food_details);
-
-        // getting views from layout
-        TextView food_description = findViewById(R.id.post_description);
-        final ImageView food_image = findViewById(R.id.post_image);
 
         // retrieving info on what to display
         Intent intent = getIntent();
