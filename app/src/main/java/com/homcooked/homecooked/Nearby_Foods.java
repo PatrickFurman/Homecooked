@@ -67,11 +67,10 @@ public class Nearby_Foods extends AppCompatActivity {
             @Override
             // Scans the string version of the data and fills in TextViews with results
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Food_Item food = dataSnapshot.getValue(Food_Item.class); // need to make data stored as an object
+                // Food_Item food = dataSnapshot.getValue(Food_Item.class); // need to make data stored as an object
                 TextView food1View = findViewById(R.id.food1Text);
                 food1View.setOnClickListener(listener);
-                String listing = "Food: " + food.getName() + "Description: " + food.getDescription();
-                food1View.setText(listing);
+                food1View.setText(dataSnapshot.toString());
             }
 
             @Override

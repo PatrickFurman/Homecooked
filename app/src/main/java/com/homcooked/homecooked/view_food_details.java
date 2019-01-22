@@ -16,7 +16,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 public class view_food_details extends AppCompatActivity {
-    StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+    StorageReference storageRef = storage.getReference();
     // getting views from layout
     TextView food_description = findViewById(R.id.post_description);
     ImageView food_image = findViewById(R.id.post_image);
