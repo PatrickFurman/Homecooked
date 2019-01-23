@@ -9,6 +9,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +28,7 @@ public class Nearby_Foods extends AppCompatActivity {
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
     private DatabaseReference foodsRef = rootRef.child("Foods");
+    EditText editText;
     double latitude;
     double longitude;
     private FusedLocationProviderClient mFusedLocationClient;
@@ -70,7 +72,7 @@ public class Nearby_Foods extends AppCompatActivity {
                 // Food_Item food = dataSnapshot.getValue(Food_Item.class); // need to make data stored as an object
                 TextView food1View = findViewById(R.id.food1Text);
                 food1View.setOnClickListener(listener);
-                food1View.setText(dataSnapshot.toString());
+                food1View.setText(dataSnapshot.getKey());
             }
 
             @Override
@@ -84,8 +86,9 @@ public class Nearby_Foods extends AppCompatActivity {
 
     private View.OnClickListener listener = new View.OnClickListener() {
         public void onClick(View v) {
-            Intent intent = new Intent(v.getContext(), view_food_details.class);
-            intent.putExtra("Food details", v.toString());
+            Intent intent = new Intent(getApplicationContext(), view_food_details.class);
+            TextView view = (TextView) v;
+            intent.putExtra("Food details", view.getText());
             startActivity(intent);
         }
     };
