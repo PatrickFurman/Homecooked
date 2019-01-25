@@ -1,12 +1,15 @@
 package com.homcooked.homecooked;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +28,7 @@ public class Nearby_Foods extends AppCompatActivity {
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
     private DatabaseReference foodsRef = rootRef.child("Foods");
+    String foodName;
     double latitude;
     double longitude;
     private FusedLocationProviderClient mFusedLocationClient;
@@ -47,35 +51,50 @@ public class Nearby_Foods extends AppCompatActivity {
                                     latitude = location.getLatitude();
                                     longitude = location.getLongitude();
                                 } else {
-                                    Toast.makeText(getApplicationContext(), "Couldn't find location, " +
-                                            "make sure location services are turned on", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getApplicationContext(), R.string.location_error,
+                                            Toast.LENGTH_LONG).show();
                                 }
                             }
                         });
             } catch (Exception e) {
-                Toast.makeText(getApplicationContext(), "Error" + e.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), R.string.error + e.getMessage(),
+                        Toast.LENGTH_LONG).show();
             }
         }
     }
 
     protected void onStart() {
         super.onStart();
-        Query query = foodsRef.startAt(latitude - 10).endAt(latitude + 10);
+        Query query = foodsRef.orderByChild("Latitude").startAt(latitude - 10).
+                endAt(latitude + 10).limitToFirst(1); // change limit later and maybe start/endAt value
         query.addValueEventListener(new ValueEventListener() {
             @Override
             // Scans the string version of the data and fills in TextViews with results
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Food_Item food = dataSnapshot.getValue(Food_Item.class); // need to make data stored as an object
+                // Food_Item food = dataSnapshot.getValue(Food_Item.class); // need to make data stored as an object
                 TextView food1View = findViewById(R.id.food1Text);
-                food1View.setText(food.getDescription());
+                food1View.setOnClickListener(listener);
+                String description = dataSnapshot.getKey() + R.string.blank + dataSnapshot.getValue();
+                foodName = dataSnapshot.getValue().toString();
+                food1View.setText(description);
             }
 
             @Override
             // Displaying error message if necessary
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(getApplicationContext(), "Error: " +
+                Toast.makeText(getApplicationContext(), R.string.error +
                         databaseError.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
+
+    private View.OnClickListener listener = new View.OnClickListener() {
+        public void onClick(View v) {
+            Intent intent = new Intent(getApplicationContext(), view_food_details.class);
+            TextView view = (TextView) v;
+            intent.putExtra("Food details", view.getText());
+            intent.putExtra("Food name", foodName);
+            startActivity(intent);
+        }
+    };
 }
