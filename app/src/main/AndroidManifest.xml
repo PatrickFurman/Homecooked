@@ -22,6 +22,7 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".Nearby_Foods" />
         <activity android:name=".view_food_details"></activity>
+        <activity android:name=".PostActivity"></activity>
     </application>
 
 </manifest>

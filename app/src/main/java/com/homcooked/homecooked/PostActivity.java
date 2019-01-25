@@ -47,7 +47,8 @@ public class PostActivity extends AppCompatActivity {
     private DatabaseReference UsersRef, PostsRef;
     private FirebaseAuth mAuth;
 
-    private String saveCurrentDate, saveCurrentTime, postRandomName, downloadUrl, current_user_id;
+    private String saveCurrentDate, saveCurrentTime, postRandomName, downloadUrl, current_user_id, name;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,12 +56,12 @@ public class PostActivity extends AppCompatActivity {
         setContentView(R.layout.activity_post);
 
         mAuth = FirebaseAuth.getInstance();
-        //current_user_id = mAuth.getCurrentUser().getUid();
-
+        current_user_id = mAuth.getCurrentUser().getUid();
+        name = mAuth.getCurrentUser().getDisplayName();
 
         PostsImagesReference = FirebaseStorage.getInstance().getReference();
-        //UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
-        PostsRef = FirebaseDatabase.getInstance().getReference().child("Posts");
+        UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
+        PostsRef = FirebaseDatabase.getInstance().getReference("Posts");
 
         SelectPostImage = (ImageButton) findViewById(R.id.select_post_image);
         UploadPostButton = (Button) findViewById(R.id.upload_post_button);
@@ -119,7 +120,7 @@ public class PostActivity extends AppCompatActivity {
                     downloadUrl = task.getResult().getStorage().getDownloadUrl().toString();
                     Toast.makeText(PostActivity.this, "Image uploaded successfully", Toast.LENGTH_SHORT).show();
 
-                    //SavingPostInformationToDatabase();
+                    SavingPostInformationToDatabase();
                 }
                 else {
                     String message = task.getException().getMessage();
@@ -130,26 +131,37 @@ public class PostActivity extends AppCompatActivity {
     }
 
     private void SavingPostInformationToDatabase() {
-        UsersRef.child(current_user_id).addValueEventListener(new ValueEventListener() {
+
+        PostsRef.child(current_user_id + postRandomName).setValue(new Posts(current_user_id, saveCurrentTime, saveCurrentDate, downloadUrl, Description, name));
+        SendUserToMainActivity();
+
+        /*   UsersRef.child(current_user_id).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    String userName = dataSnapshot.child("name").getValue().toString();
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists())  {
+                    String name = dataSnapshot.child("name").getValue().toString();
 
                     HashMap postsMap = new HashMap();
-                    //postsMap.put("uid", current_user_id);
+                    postsMap.put("uid", current_user_id);
                     postsMap.put("description", Description);
                     postsMap.put("postimage", downloadUrl);
-                    //postsMap.put("name", userName);
-                    //PostsRef.child(current_user_id + postRandomName).updateChildren(postsMap);
-                    PostsRef.child(postRandomName).updateChildren(postsMap)
+                    postsMap.put("name", name);
+
+                    PostsRef.child(current_user_id + postRandomName).updateChildren(postsMap)
+
+                    //PostsRef.push().setValue(new Posts(current_user_id, saveCurrentDate, saveCurrentTime, downloadUrl, Description, name))
+                    //PostsRef.child(current_user_id + postRandomName).setValue((new Posts(current_user_id, saveCurrentDate, saveCurrentTime, downloadUrl, Description, name)))
                             .addOnCompleteListener(new OnCompleteListener() {
                                 @Override
-                                public void onComplete(@NonNull Task task) {
-                                    if (task.isSuccessful()) {
+                                public void onComplete(@NonNull Task task)
+                                {
+                                    if(task.isSuccessful())
+                                    {
                                         SendUserToMainActivity();
-                                        Toast.makeText(PostActivity.this, "Post is uploaded successfully.", Toast.LENGTH_SHORT).show();
-                                    } else {
+                                        Toast.makeText(PostActivity.this, "Post has been uploaded successfully.", Toast.LENGTH_SHORT).show();
+                                    }
+                                    else
+                                    {
                                         Toast.makeText(PostActivity.this, "Error occurred while uploading post.", Toast.LENGTH_SHORT).show();
                                     }
                                 }
@@ -161,7 +173,9 @@ public class PostActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        });   */
+
+
     }
 
 
