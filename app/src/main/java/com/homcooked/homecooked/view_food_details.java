@@ -45,7 +45,7 @@ public class view_food_details extends AppCompatActivity {
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                storageRef.child(dataSnapshot.getValue().toString()).getBytes(100000)
+                storageRef.child("Post Images").child("" + dataSnapshot.getValue()).getBytes(1024*1024*5)
                         .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                             @Override
                             public void onSuccess(byte[] bytes) {

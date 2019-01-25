@@ -65,8 +65,7 @@ public class Nearby_Foods extends AppCompatActivity {
 
     protected void onStart() {
         super.onStart();
-        Query query = foodsRef.orderByChild("Latitude").startAt(latitude - 10).
-                endAt(latitude + 10).limitToFirst(1); // change limit later and maybe start/endAt value
+        Query query = foodsRef.orderByChild("Latitude").limitToFirst(1); // change limit later and maybe start/endAt value
         query.addValueEventListener(new ValueEventListener() {
             @Override
             // Scans the string version of the data and fills in TextViews with results
@@ -74,8 +73,10 @@ public class Nearby_Foods extends AppCompatActivity {
                 // Food_Item food = dataSnapshot.getValue(Food_Item.class); // need to make data stored as an object
                 TextView food1View = findViewById(R.id.food1Text);
                 food1View.setOnClickListener(listener);
-                String description = dataSnapshot.getKey() + R.string.blank + dataSnapshot.getValue();
-                foodName = dataSnapshot.getValue().toString();
+                String unprocessed = "" + dataSnapshot.getValue();
+                foodName = unprocessed.substring(1, unprocessed.indexOf('='));
+                String description = foodName + "\n" + unprocessed.substring(unprocessed.indexOf("Seller"), unprocessed.indexOf("Photo") - 2)
+                        + "\n" + unprocessed.substring(unprocessed.indexOf("Description"), unprocessed.indexOf("}"));
                 food1View.setText(description);
             }
 

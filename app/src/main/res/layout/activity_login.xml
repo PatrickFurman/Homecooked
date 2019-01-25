@@ -99,6 +99,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:background="@android:color/white"
+        android:onClick="createNewAccount"
         android:text="Not a user? Register now!"
         android:textAllCaps="false"
         android:textColor="@android:color/darker_gray"
