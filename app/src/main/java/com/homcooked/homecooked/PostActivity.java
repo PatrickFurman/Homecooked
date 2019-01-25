@@ -133,7 +133,9 @@ public class PostActivity extends AppCompatActivity {
     private void SavingPostInformationToDatabase() {
 
         PostsRef.child(current_user_id + postRandomName).setValue(new Posts(current_user_id, saveCurrentTime, saveCurrentDate, downloadUrl, Description, name));
-        SendUserToMainActivity();
+
+        //SendUserToMainActivity();
+        SendUserToNearbyFoods();
 
         /*   UsersRef.child(current_user_id).addValueEventListener(new ValueEventListener() {
             @Override
@@ -200,6 +202,16 @@ public class PostActivity extends AppCompatActivity {
     private void SendUserToMainActivity() {
         Intent mainIntent = new Intent(PostActivity.this, MainActivity.class);
         startActivity(mainIntent);
+    }
+
+    private void SendUserToFoodDetails() {
+        Intent foodDetailsIntent = new Intent(PostActivity.this, view_food_details.class);
+        startActivity(foodDetailsIntent);
+    }
+
+    private void SendUserToNearbyFoods() {
+        Intent nearbyFoodsIntent = new Intent (PostActivity.this, Nearby_Foods.class);
+        startActivity(nearbyFoodsIntent);
     }
 
 }
