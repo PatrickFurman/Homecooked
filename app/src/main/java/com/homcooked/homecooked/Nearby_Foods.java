@@ -28,7 +28,10 @@ public class Nearby_Foods extends AppCompatActivity {
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
     private DatabaseReference foodsRef = rootRef.child("Foods");
+    private DatabaseReference usersRef = rootRef.child("Users");
     String foodName;
+    String sellerEmail;
+    String sellerName;
     double latitude;
     double longitude;
     private FusedLocationProviderClient mFusedLocationClient;
@@ -65,7 +68,7 @@ public class Nearby_Foods extends AppCompatActivity {
 
     protected void onStart() {
         super.onStart();
-        Query query = foodsRef.orderByChild("Latitude").limitToFirst(1); // change limit later and maybe start/endAt value
+        Query query = foodsRef.orderByChild("Latitude").limitToFirst(3); // change limit later and maybe start/endAt value
         query.addValueEventListener(new ValueEventListener() {
             @Override
             // Scans the string version of the data and fills in TextViews with results
@@ -73,15 +76,36 @@ public class Nearby_Foods extends AppCompatActivity {
                 // Food_Item food = dataSnapshot.getValue(Food_Item.class); // need to make data stored as an object
                 TextView food1View = findViewById(R.id.food1Text);
                 food1View.setOnClickListener(listener);
+                TextView food2View = findViewById(R.id.food2Text);
+                food2View.setOnClickListener(listener);
+                TextView food3View = findViewById(R.id.food3Text);
+                food3View.setOnClickListener(listener);
+
                 String unprocessed = "" + dataSnapshot.getValue();
                 foodName = unprocessed.substring(1, unprocessed.indexOf('='));
                 String description = foodName + "\n" + unprocessed.substring(unprocessed.indexOf("Seller"), unprocessed.indexOf("Photo") - 2)
                         + "\n" + unprocessed.substring(unprocessed.indexOf("Description"), unprocessed.indexOf("}"));
+
+                sellerName = unprocessed.substring(unprocessed.indexOf("Seller"), unprocessed.indexOf("Photo") - 2);
                 food1View.setText(description);
             }
 
             @Override
             // Displaying error message if necessary
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(getApplicationContext(), R.string.error +
+                        databaseError.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+        Query sellerQuery = usersRef.child(sellerName);
+        sellerQuery.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                sellerEmail = "" + dataSnapshot.getValue();
+                sellerEmail = sellerEmail.substring(sellerEmail.indexOf("email"), sellerEmail.indexOf("password") - 1);
+            }
+
+            @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Toast.makeText(getApplicationContext(), R.string.error +
                         databaseError.getMessage(), Toast.LENGTH_LONG).show();
@@ -95,6 +119,7 @@ public class Nearby_Foods extends AppCompatActivity {
             TextView view = (TextView) v;
             intent.putExtra("Food details", view.getText());
             intent.putExtra("Food name", foodName);
+            intent.putExtra("Seller email", sellerEmail);
             startActivity(intent);
         }
     };

@@ -27,6 +27,7 @@ public class view_food_details extends AppCompatActivity {
     private DatabaseReference foodsRef = rootRef.child("Foods");
     // getting views from layout
     TextView food_description;
+    TextView email;
     ImageView food_image;
 
     @Override
@@ -36,11 +37,13 @@ public class view_food_details extends AppCompatActivity {
         // Initializing variables
         storageRef = FirebaseStorage.getInstance().getReference();
         food_description = findViewById(R.id.post_description);
+        email = findViewById(R.id.email);
         food_image = findViewById(R.id.post_image);
         // retrieving info on what to display
         Intent intent = getIntent();
         String description = intent.getStringExtra("Food details");
-        String foodName = intent.getStringExtra("Food name"); // query to find it's related picture later
+        String foodName = intent.getStringExtra("Food name");
+        String sellerEmail = intent.getStringExtra("Seller email");
         Query query = foodsRef.child(foodName).child("PhotoKey");
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -68,8 +71,8 @@ public class view_food_details extends AppCompatActivity {
             }
         });
         // updating layout
-        // will need to change later to use correct picture, is currently always the same
         food_description.setText(description);
+        email.setText(sellerEmail);
 
     }
 }
