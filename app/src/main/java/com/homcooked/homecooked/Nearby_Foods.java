@@ -28,6 +28,7 @@ public class Nearby_Foods extends AppCompatActivity {
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
     private DatabaseReference foodsRef = rootRef.child("Foods");
+    // private DatabaseReference postsRef = rootRef.child("Posts");
     private DatabaseReference usersRef = rootRef.child("Users");
     String foodName;
     String sellerEmail;
@@ -77,12 +78,14 @@ public class Nearby_Foods extends AppCompatActivity {
                 TextView food1View = findViewById(R.id.food1Text);
                 food1View.setOnClickListener(listener);
                 process(unprocessed, food1View);
+                /*
                 TextView food2View = findViewById(R.id.food2Text);
                 food2View.setOnClickListener(listener);
                 process(unprocessed, food2View);
                 TextView food3View = findViewById(R.id.food3Text);
                 food3View.setOnClickListener(listener);
                 process(unprocessed, food3View);
+                */
             }
 
             @Override
@@ -92,6 +95,20 @@ public class Nearby_Foods extends AppCompatActivity {
                         databaseError.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
+        /*
+        Query query1 = postsRef.orderByChild("time").limitToFirst(3);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // will need to update process method to work with info in posts
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        */
         Query sellerQuery = usersRef.child(sellerName);
         sellerQuery.addValueEventListener(new ValueEventListener() {
             @Override
