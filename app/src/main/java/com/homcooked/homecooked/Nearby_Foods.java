@@ -73,21 +73,16 @@ public class Nearby_Foods extends AppCompatActivity {
             @Override
             // Scans the string version of the data and fills in TextViews with results
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // Food_Item food = dataSnapshot.getValue(Food_Item.class); // need to make data stored as an object
+                String unprocessed = "" + dataSnapshot.getValue();
                 TextView food1View = findViewById(R.id.food1Text);
                 food1View.setOnClickListener(listener);
+                process(unprocessed, food1View);
                 TextView food2View = findViewById(R.id.food2Text);
                 food2View.setOnClickListener(listener);
+                process(unprocessed, food2View);
                 TextView food3View = findViewById(R.id.food3Text);
                 food3View.setOnClickListener(listener);
-
-                String unprocessed = "" + dataSnapshot.getValue();
-                foodName = unprocessed.substring(1, unprocessed.indexOf('='));
-                String description = foodName + "\n" + unprocessed.substring(unprocessed.indexOf("Seller"), unprocessed.indexOf("Photo") - 2)
-                        + "\n" + unprocessed.substring(unprocessed.indexOf("Description"), unprocessed.indexOf("}"));
-
-                sellerName = unprocessed.substring(unprocessed.indexOf("Seller"), unprocessed.indexOf("Photo") - 2);
-                food1View.setText(description);
+                process(unprocessed, food3View);
             }
 
             @Override
@@ -123,4 +118,13 @@ public class Nearby_Foods extends AppCompatActivity {
             startActivity(intent);
         }
     };
+
+    private void process (String unprocessed, TextView view) {
+        foodName = unprocessed.substring(1, unprocessed.indexOf('='));
+        String description = foodName + "\n" + unprocessed.substring(unprocessed.indexOf("Seller"), unprocessed.indexOf("Photo") - 2)
+                + "\n" + unprocessed.substring(unprocessed.indexOf("Description"), unprocessed.indexOf("}"));
+
+        sellerName = unprocessed.substring(unprocessed.indexOf("Seller"), unprocessed.indexOf("Photo") - 2);
+        view.setText(description);
+    }
 }
