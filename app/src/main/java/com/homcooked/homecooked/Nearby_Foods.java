@@ -33,6 +33,7 @@ public class Nearby_Foods extends AppCompatActivity {
     String foodName;
     String sellerEmail;
     String sellerName;
+    String unprocessed;
     double latitude;
     double longitude;
     private FusedLocationProviderClient mFusedLocationClient;
@@ -74,18 +75,16 @@ public class Nearby_Foods extends AppCompatActivity {
             @Override
             // Scans the string version of the data and fills in TextViews with results
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String unprocessed = "" + dataSnapshot.getValue();
+                unprocessed = "" + dataSnapshot.getValue();
                 TextView food1View = findViewById(R.id.food1Text);
                 food1View.setOnClickListener(listener);
                 process(unprocessed, food1View);
-                /*
                 TextView food2View = findViewById(R.id.food2Text);
                 food2View.setOnClickListener(listener);
                 process(unprocessed, food2View);
                 TextView food3View = findViewById(R.id.food3Text);
                 food3View.setOnClickListener(listener);
                 process(unprocessed, food3View);
-                */
             }
 
             @Override
@@ -142,6 +141,12 @@ public class Nearby_Foods extends AppCompatActivity {
                 + "\n" + unprocessed.substring(unprocessed.indexOf("Description"), unprocessed.indexOf("}"));
 
         sellerName = unprocessed.substring(unprocessed.indexOf("Seller"), unprocessed.indexOf("Photo") - 2);
+        try {
+            unprocessed = unprocessed.substring(unprocessed.indexOf("Photo") - 2);
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), R.string.error +
+                    e.getMessage(), Toast.LENGTH_LONG).show();
+        }
         view.setText(description);
     }
 }
