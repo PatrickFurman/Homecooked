@@ -88,6 +88,10 @@ public class Account_Creation extends AppCompatActivity {
                                                     Toast.LENGTH_LONG).show();
                                         }
                                     }
+                                    else {
+                                        Toast.makeText(getApplicationContext(), R.string.account_created,
+                                                Toast.LENGTH_LONG).show();
+                                    }
                                 }
                             });
                     User user = new User(username, firstName, lastName, email, password);

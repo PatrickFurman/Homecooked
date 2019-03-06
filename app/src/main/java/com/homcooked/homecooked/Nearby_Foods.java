@@ -78,15 +78,15 @@ public class Nearby_Foods extends AppCompatActivity {
                 unprocessed = "" + dataSnapshot.getValue();
                 TextView food1View = findViewById(R.id.food1Text);
                 food1View.setOnClickListener(listener);
-                process(unprocessed, food1View);
+                process(food1View);
                 TextView food2View = findViewById(R.id.food2Text);
                 food2View.setOnClickListener(listener);
-                process(unprocessed, food2View);
+                process(food2View);
                 TextView food3View = findViewById(R.id.food3Text);
                 food3View.setOnClickListener(listener);
-                process(unprocessed, food3View);
+                process(food3View);
             }
-
+            // go here https://stackoverflow.com/questions/25347848/how-to-add-more-button-at-the-end-of-listview-to-load-more-items
             @Override
             // Displaying error message if necessary
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -135,7 +135,7 @@ public class Nearby_Foods extends AppCompatActivity {
         }
     };
 
-    private void process (String unprocessed, TextView view) {
+    private void process (TextView view) {
         foodName = unprocessed.substring(1, unprocessed.indexOf('='));
         String description = foodName + "\n" + unprocessed.substring(unprocessed.indexOf("Seller"), unprocessed.indexOf("Photo") - 2)
                 + "\n" + unprocessed.substring(unprocessed.indexOf("Description"), unprocessed.indexOf("}"));
