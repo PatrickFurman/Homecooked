@@ -69,8 +69,6 @@ public class Account_Creation extends AppCompatActivity {
                             Toast.LENGTH_LONG).show();
                 } else {
                     // Creating new user object with all data and Firebase user with just email and password
-                    User user = new User(username, firstName, lastName, email, password);
-                    usersRef.child(user.getName()).setValue(user);
                     auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(
                             new OnCompleteListener<AuthResult>() {
                                 @Override
@@ -90,8 +88,14 @@ public class Account_Creation extends AppCompatActivity {
                                                     Toast.LENGTH_LONG).show();
                                         }
                                     }
+                                    else {
+                                        Toast.makeText(getApplicationContext(), R.string.account_created,
+                                                Toast.LENGTH_LONG).show();
+                                    }
                                 }
                             });
+                    User user = new User(username, firstName, lastName, email, password);
+                    usersRef.child(auth.getCurrentUser().getUid()).setValue(user);
                     startNearbyFoods();
                 }
             }
