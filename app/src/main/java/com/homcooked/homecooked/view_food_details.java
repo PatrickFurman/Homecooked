@@ -44,7 +44,7 @@ public class view_food_details extends AppCompatActivity {
         String description = intent.getStringExtra("Food details");
         String foodName = intent.getStringExtra("Food name");
         String sellerEmail = intent.getStringExtra("Seller email");
-        Query query = foodsRef.child(foodName).child("PhotoKey");
+        Query query = foodsRef.child(foodName).child("Photokey");
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
