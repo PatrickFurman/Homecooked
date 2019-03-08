@@ -28,7 +28,12 @@ public class Nearby_Foods extends AppCompatActivity {
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
     private DatabaseReference foodsRef = rootRef.child("Foods");
+    // private DatabaseReference postsRef = rootRef.child("Posts");
+    private DatabaseReference usersRef = rootRef.child("Users");
     String foodName;
+    String sellerEmail;
+    String sellerName;
+    String unprocessed;
     double latitude;
     double longitude;
     private FusedLocationProviderClient mFusedLocationClient;
@@ -65,21 +70,24 @@ public class Nearby_Foods extends AppCompatActivity {
 
     protected void onStart() {
         super.onStart();
-        Query query = foodsRef.orderByChild("Latitude").limitToFirst(1); // change limit later and maybe start/endAt value
-        query.addValueEventListener(new ValueEventListener() {
+        Query query = foodsRef.orderByChild("Latitude").limitToFirst(3); // change limit later and maybe start/endAt value
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             // Scans the string version of the data and fills in TextViews with results
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // Food_Item food = dataSnapshot.getValue(Food_Item.class); // need to make data stored as an object
+                unprocessed = "" + dataSnapshot.getValue();
                 TextView food1View = findViewById(R.id.food1Text);
                 food1View.setOnClickListener(listener);
-                String unprocessed = "" + dataSnapshot.getValue();
-                foodName = unprocessed.substring(1, unprocessed.indexOf('='));
-                String description = foodName + "\n" + unprocessed.substring(unprocessed.indexOf("Seller"), unprocessed.indexOf("Photo") - 2)
-                        + "\n" + unprocessed.substring(unprocessed.indexOf("Description"), unprocessed.indexOf("}"));
-                food1View.setText(description);
+                process(food1View);
+                TextView food2View = findViewById(R.id.food2Text);
+                food2View.setOnClickListener(listener);
+                process(food2View);
+                TextView food3View = findViewById(R.id.food3Text);
+                food3View.setOnClickListener(listener);
+                process(food3View);
             }
 
+            // go here https://stackoverflow.com/questions/25347848/how-to-add-more-button-at-the-end-of-listview-to-load-more-items
             @Override
             // Displaying error message if necessary
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -95,7 +103,45 @@ public class Nearby_Foods extends AppCompatActivity {
             TextView view = (TextView) v;
             intent.putExtra("Food details", view.getText());
             intent.putExtra("Food name", foodName);
+            sellerEmail = getSellerEmail();
+            intent.putExtra("Seller email", sellerEmail);
             startActivity(intent);
         }
     };
+
+    private String getSellerEmail () {
+        Query query = usersRef.equalTo(sellerName);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                try {
+                    sellerEmail = dataSnapshot.getValue(String.class);
+                    sellerEmail = sellerEmail.substring(sellerEmail.indexOf("email"), sellerEmail.indexOf("password") - 1);
+                } catch (Exception e) {
+                    sellerEmail = "Error 404 Email not found";
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(getApplicationContext(), R.string.error +
+                        databaseError.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+        return sellerEmail;
+    }
+
+    private void process (TextView view) {
+        foodName = unprocessed.substring(1, unprocessed.indexOf('='));
+        String description = foodName + "\n" + unprocessed.substring(unprocessed.indexOf("Description"), unprocessed.indexOf("}"));
+
+        sellerName = unprocessed.substring(unprocessed.indexOf("Seller"), unprocessed.indexOf("Photo") - 2);
+        try {
+            unprocessed = unprocessed.substring(unprocessed.indexOf("}") + 1);
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), R.string.error +
+                    e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+        view.setText(description);
+    }
 }
