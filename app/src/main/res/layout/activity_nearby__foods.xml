@@ -6,11 +6,13 @@
     android:fillViewport="true">
 
     <TableLayout
+        android:id="@+id/table"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:stretchColumns="1">
 
         <TableRow>
+
             <TextView
                 android:id="@+id/food1Text"
                 android:layout_width="match_parent"
@@ -20,21 +22,34 @@
         </TableRow>
 
         <TableRow>
+
             <TextView
                 android:id="@+id/food2Text"
-                android:layout_width="match_parent"
+                android:layout_width="361dp"
                 android:layout_height="wrap_content"
                 android:padding="3dp"
                 android:text="Loading..." />
         </TableRow>
 
         <TableRow>
+
             <TextView
                 android:id="@+id/food3Text"
-                android:layout_width="match_parent"
+                android:layout_width="374dp"
                 android:layout_height="wrap_content"
                 android:padding="3dp"
                 android:text="Loading..." />
+        </TableRow>
+
+        <TableRow>
+
+            <Button
+                android:id="@+id/loadMoreButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Load more..."
+                android:textColor="@color/common_google_signin_btn_text_light_default"
+                android:textSize="12sp" />
         </TableRow>
 
     </TableLayout>

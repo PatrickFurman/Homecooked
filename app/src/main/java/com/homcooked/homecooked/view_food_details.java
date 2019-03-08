@@ -44,11 +44,12 @@ public class view_food_details extends AppCompatActivity {
         String description = intent.getStringExtra("Food details");
         String foodName = intent.getStringExtra("Food name");
         String sellerEmail = intent.getStringExtra("Seller email");
-        Query query = foodsRef.child(foodName).child("Photokey");
+        final String photoKey = intent.getStringExtra("PhotoKey");
+        Query query = foodsRef.child(foodName).child("PhotoKey");
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                storageRef.child("Post Images").child("" + dataSnapshot.getValue()).getBytes(1024*1024*5)
+                storageRef.child(photoKey).getBytes(1024*1024*5)
                         .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                             @Override
                             public void onSuccess(byte[] bytes) {
@@ -76,4 +77,3 @@ public class view_food_details extends AppCompatActivity {
 
     }
 }
-
