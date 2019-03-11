@@ -4,4 +4,6 @@
     <string name="location_error">Couldn\'t find location, make sure location services are turned on</string>
     <string name="blank"></string>
     <string name="account_created">Registration Successful</string>
+    <string name="load_more">Load more...</string>
+    <string name="load_more_button">loadMoreButton</string>
 </resources>

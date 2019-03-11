@@ -23,8 +23,6 @@ import com.google.firebase.storage.StorageReference;
 
 public class view_food_details extends AppCompatActivity {
     StorageReference storageRef;
-    private DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-    private DatabaseReference foodsRef = rootRef.child("Foods");
     // getting views from layout
     TextView food_description;
     TextView email;
@@ -44,36 +42,23 @@ public class view_food_details extends AppCompatActivity {
         String description = intent.getStringExtra("Food details");
         String foodName = intent.getStringExtra("Food name");
         String sellerEmail = intent.getStringExtra("Seller email");
-        Query query = foodsRef.child(foodName).child("Photokey");
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                storageRef.child("Post Images").child("" + dataSnapshot.getValue()).getBytes(1024*1024*5)
-                        .addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                            @Override
-                            public void onSuccess(byte[] bytes) {
-                                Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                                food_image.setImageBitmap(Bitmap.createScaledBitmap(bmp, food_image.getWidth(),
-                                        food_image.getHeight(), false));
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
+        storageRef.child("Post Images").child(intent.getStringExtra("PhotoKey")).getBytes(1024*1024*5)
+                .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                     @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    public void onSuccess(byte[] bytes) {
+                        Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                        food_image.setImageBitmap(Bitmap.createScaledBitmap(bmp, food_image.getWidth(),
+                                food_image.getHeight(), false));
                     }
-                });
-            }
-
+                }).addOnFailureListener(new OnFailureListener() {
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(getApplicationContext(), R.string.error +
-                        databaseError.getMessage(), Toast.LENGTH_LONG).show();
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(), "Photo not found", Toast.LENGTH_LONG).show();
             }
         });
         // updating layout
-        food_description.setText(description);
+        food_description.setText(foodName + "\n" + description);
         email.setText(sellerEmail);
 
     }
 }
-

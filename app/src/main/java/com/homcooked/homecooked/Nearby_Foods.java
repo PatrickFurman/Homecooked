@@ -3,15 +3,24 @@ package com.homcooked.homecooked;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.DataSetObserver;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.HeaderViewListAdapter;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.WrapperListAdapter;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -23,17 +32,23 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static android.view.View.TEXT_ALIGNMENT_CENTER;
+import static android.view.View.generateViewId;
+
 public class Nearby_Foods extends AppCompatActivity {
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+    private DatabaseReference postsRef = rootRef.child("Posts");
     private DatabaseReference foodsRef = rootRef.child("Foods");
-    // private DatabaseReference postsRef = rootRef.child("Posts");
     private DatabaseReference usersRef = rootRef.child("Users");
-    String foodName;
+    TextView loadMoreButton;
+    ListView lv;
+    int startValue = 8;
     String sellerEmail;
-    String sellerName;
-    String unprocessed;
     double latitude;
     double longitude;
     private FusedLocationProviderClient mFusedLocationClient;
@@ -66,28 +81,107 @@ public class Nearby_Foods extends AppCompatActivity {
                         Toast.LENGTH_LONG).show();
             }
         }
+        loadMore(startValue);
+        loadMoreButton = new TextView(this);
+        int id = generateViewId();
+        loadMoreButton.setId(id);
+        loadMoreButton.setText(R.string.load_more);
+        loadMoreButton.setTextAlignment(TEXT_ALIGNMENT_CENTER);
+        ((ListView)findViewById(R.id.list)).addFooterView(loadMoreButton);
+        findViewById(id).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startValue += 3;
+                loadMore(startValue);
+            }
+        });
     }
+    // Use when working with posts
+    /*
+    protected  void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_nearby__foods);
+        loadMore(startValue);
+        loadMoreButton = new TextView(this);
+        int id = generateViewId();
+        loadMoreButton.setId(id);
+        loadMoreButton.setText(R.string.load_more);
+        loadMoreButton.setTextAlignment(TEXT_ALIGNMENT_CENTER);
+        ((ListView)findViewById(R.id.list)).addFooterView(loadMoreButton);
+        findViewById(id).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startValue += 3;
+                loadMore(startValue);
+            }
+        });
+    }
+    */
 
     protected void onStart() {
         super.onStart();
-        Query query = foodsRef.orderByChild("Latitude").limitToFirst(3); // change limit later and maybe start/endAt value
+    }
+
+    private View.OnClickListener listener = new View.OnClickListener() {
+        public void onClick(View v) {
+            Intent intent = new Intent(getApplicationContext(), view_food_details.class);
+            usersRef.child(v.getTag(R.integer.Seller).toString()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                   sellerEmail = dataSnapshot.child("email").getValue().toString();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Toast.makeText(getApplicationContext(), R.string.error +
+                            databaseError.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+            if (sellerEmail == null)
+                sellerEmail = "Error 404 Email not found";
+            intent.putExtra("Food details", v.getTag(R.integer.Description).toString());
+            intent.putExtra("Food name", v.getTag(R.integer.Name).toString());
+            intent.putExtra("Seller email", sellerEmail);
+            intent.putExtra("PhotoKey", v.getTag(R.integer.PhotoKey).toString());
+            startActivity(intent);
+        }
+    };
+
+    private void loadMore (int i) {
+        Query query = foodsRef.orderByChild("Latitude").limitToFirst(i);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             // Scans the string version of the data and fills in TextViews with results
+            /*
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                unprocessed = "" + dataSnapshot.getValue();
-                TextView food1View = findViewById(R.id.food1Text);
-                food1View.setOnClickListener(listener);
-                process(food1View);
-                TextView food2View = findViewById(R.id.food2Text);
-                food2View.setOnClickListener(listener);
-                process(food2View);
-                TextView food3View = findViewById(R.id.food3Text);
-                food3View.setOnClickListener(listener);
-                process(food3View);
+                lv = findViewById(R.id.list);
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    TextView view = new TextView(getApplicationContext());
+                    String viewText = child.child("foodName").getValue(String.class) +
+                            "\n" + child.child("description").getValue(String.class);
+                    view.setText(viewText);
+                    view.setTag(child.child("postimage").getValue(String.class));
+                    view.setOnClickListener(listener);
+                    lv.addHeaderView(view);
+                    lv.setAdapter(lv.getAdapter());
+                }
+            }
+            */
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                lv = findViewById(R.id.list);
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    TextView view = new TextView(getApplicationContext());
+                    view.setTag(R.integer.PhotoKey, child.child("PhotoKey").getValue(String.class));
+                    view.setTag(R.integer.Name, child.getKey());
+                    view.setTag(R.integer.Description, child.child("Description").getValue(String.class));
+                    view.setTag(R.integer.Seller, child.child("Seller").getValue(String.class));
+                    view.setText(view.getTag(R.integer.Name) + "\n" + view.getTag(R.integer.Description));
+                    view.setOnClickListener(listener);
+                    lv.addHeaderView(view);
+                    lv.setAdapter(lv.getAdapter());
+                }
             }
 
-            // go here https://stackoverflow.com/questions/25347848/how-to-add-more-button-at-the-end-of-listview-to-load-more-items
             @Override
             // Displaying error message if necessary
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -95,53 +189,5 @@ public class Nearby_Foods extends AppCompatActivity {
                         databaseError.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
-    }
-
-    private View.OnClickListener listener = new View.OnClickListener() {
-        public void onClick(View v) {
-            Intent intent = new Intent(getApplicationContext(), view_food_details.class);
-            TextView view = (TextView) v;
-            intent.putExtra("Food details", view.getText());
-            intent.putExtra("Food name", foodName);
-            sellerEmail = getSellerEmail();
-            intent.putExtra("Seller email", sellerEmail);
-            startActivity(intent);
-        }
-    };
-
-    private String getSellerEmail () {
-        Query query = usersRef.equalTo(sellerName);
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                try {
-                    sellerEmail = dataSnapshot.getValue(String.class);
-                    sellerEmail = sellerEmail.substring(sellerEmail.indexOf("email"), sellerEmail.indexOf("password") - 1);
-                } catch (Exception e) {
-                    sellerEmail = "Error 404 Email not found";
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(getApplicationContext(), R.string.error +
-                        databaseError.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-        return sellerEmail;
-    }
-
-    private void process (TextView view) {
-        foodName = unprocessed.substring(1, unprocessed.indexOf('='));
-        String description = foodName + "\n" + unprocessed.substring(unprocessed.indexOf("Description"), unprocessed.indexOf("}"));
-
-        sellerName = unprocessed.substring(unprocessed.indexOf("Seller"), unprocessed.indexOf("Photo") - 2);
-        try {
-            unprocessed = unprocessed.substring(unprocessed.indexOf("}") + 1);
-        } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), R.string.error +
-                    e.getMessage(), Toast.LENGTH_LONG).show();
-        }
-        view.setText(description);
     }
 }
