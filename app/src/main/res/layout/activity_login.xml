@@ -80,6 +80,7 @@
         android:id="@+id/Sign_up"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+<<<<<<< HEAD
         android:layout_alignEnd="@+id/Login"
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="-20dp"
@@ -89,5 +90,24 @@
         android:textSize="18sp"
         android:layout_alignRight="@+id/Login"
         android:layout_marginRight="-20dp" />
+=======
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@android:color/white"
+        android:onClick="createNewAccount"
+        android:text="Not a user? Register now!"
+        android:textAllCaps="false"
+        android:textColor="@android:color/darker_gray"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnLogin"
+        app:layout_constraintVertical_bias="0.022" />
+>>>>>>> da3db47f4e78d9d3a296357510f1c9152461e598
 
 </RelativeLayout>

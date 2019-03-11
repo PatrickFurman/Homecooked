@@ -28,24 +28,38 @@
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/upload_picture" />
 
-    <EditText
+    <TextView
         android:id="@+id/post_description"
         android:layout_width="327dp"
         android:layout_height="188dp"
         android:layout_marginStart="29dp"
         android:layout_marginLeft="29dp"
-        android:layout_marginTop="19dp"
         android:layout_marginEnd="17dp"
         android:layout_marginRight="17dp"
-        android:layout_marginBottom="100dp"
+        android:layout_marginBottom="68dp"
         android:ems="10"
         android:hint="Description"
-        android:inputType="textMultiLine"
+        android:inputType="none"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/email"
+        android:layout_width="330dp"
+        android:layout_height="63dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="email"
+        app:layout_constraintBottom_toTopOf="@+id/post_description"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/select_post_image" />
+        app:layout_constraintTop_toBottomOf="@+id/post_image" />
 
 
 </android.support.constraint.ConstraintLayout>
