@@ -1,12 +1,14 @@
 package com.homcooked.homecooked;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,7 +69,9 @@ public class Nearby_Foods extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Food_Item food = dataSnapshot.getValue(Food_Item.class); // need to make data stored as an object
                 TextView food1View = findViewById(R.id.food1Text);
-                food1View.setText(food.getDescription());
+                food1View.setOnClickListener(listener);
+                String listing = "Food: " + food.getName() + "Description: " + food.getDescription();
+                food1View.setText(listing);
             }
 
             @Override
@@ -78,4 +82,12 @@ public class Nearby_Foods extends AppCompatActivity {
             }
         });
     }
+
+    private View.OnClickListener listener = new View.OnClickListener() {
+        public void onClick(View v) {
+            Intent intent = new Intent(v.getContext(), view_food_details.class);
+            intent.putExtra("Food details", v.toString());
+            startActivity(intent);
+        }
+    };
 }
