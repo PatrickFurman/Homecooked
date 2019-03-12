@@ -38,10 +38,12 @@ public class PostActivity extends AppCompatActivity {
     private ImageButton SelectPostImage;
     private Button UploadPostButton;
     private EditText PostDescription;
+    private EditText FoodPostName;
 
     private static final int Gallery_Pick = 1;
     private Uri ImageUri;
     private String Description;
+    private String FoodName;
 
     private StorageReference PostsImagesReference;
     private DatabaseReference UsersRef, PostsRef;
@@ -66,6 +68,7 @@ public class PostActivity extends AppCompatActivity {
         SelectPostImage = (ImageButton) findViewById(R.id.select_post_image);
         UploadPostButton = (Button) findViewById(R.id.upload_post_button);
         PostDescription = (EditText) findViewById(R.id.post_description);
+        FoodPostName = (EditText) findViewById(R.id.food_name);
 
         SelectPostImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,6 +89,7 @@ public class PostActivity extends AppCompatActivity {
 
     private void ValidatePostInfo() {
         Description = PostDescription.getText().toString();
+        FoodName = FoodPostName.getText().toString();
 
         if (ImageUri == null){
             Toast.makeText(this, "Please select an image.", Toast.LENGTH_SHORT).show();
@@ -93,6 +97,9 @@ public class PostActivity extends AppCompatActivity {
 
         else if (TextUtils.isEmpty(Description)) {
             Toast.makeText(this, "Please write a description.", Toast.LENGTH_SHORT).show();
+        }
+        else if (TextUtils.isEmpty(FoodName)) {
+            Toast.makeText(this, "Please write a title/food name.", Toast.LENGTH_SHORT).show();
         }
         else {
             StoringImageToFirebaseStorage();
@@ -132,7 +139,7 @@ public class PostActivity extends AppCompatActivity {
 
     private void SavingPostInformationToDatabase() {
 
-        PostsRef.child(current_user_id + postRandomName).setValue(new Posts(current_user_id, saveCurrentTime, saveCurrentDate, downloadUrl, Description, name));
+        PostsRef.child(current_user_id + postRandomName).setValue(new Posts(current_user_id, saveCurrentTime, saveCurrentDate, downloadUrl, Description, name, FoodName));
 
         //SendUserToMainActivity();
         SendUserToNearbyFoods();
