@@ -2,10 +2,10 @@ package com.homcooked.homecooked;
 
 public class Posts {
 
-    public String uid, postimage, description, name, date, time, foodName;
+    public String uid, postimage, description, name, date, time, foodName, photoKey;
 
 
-    public Posts(String uid, String time, String date, String postimage, String description, String name, String foodName) {
+    public Posts(String uid, String time, String date, String postimage, String description, String name, String foodName, String photoKey) {
         this.uid = uid;
         this.time = time;
         this.date = date;
@@ -13,6 +13,7 @@ public class Posts {
         this.description = description;
         this.name = name;
         this.foodName = foodName;
+        this.photoKey = photoKey;
     }
 
     public String getUid() {

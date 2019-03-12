@@ -49,7 +49,7 @@ public class PostActivity extends AppCompatActivity {
     private DatabaseReference UsersRef, PostsRef;
     private FirebaseAuth mAuth;
 
-    private String saveCurrentDate, saveCurrentTime, postRandomName, downloadUrl, current_user_id, name;
+    private String saveCurrentDate, saveCurrentTime, postRandomName, downloadUrl, current_user_id, name, photoKey;
 
 
     @Override
@@ -125,6 +125,7 @@ public class PostActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                 if(task.isSuccessful()) {
                     downloadUrl = task.getResult().getStorage().getDownloadUrl().toString();
+                    photoKey = ImageUri.getLastPathSegment() + postRandomName + ".jpg";
                     Toast.makeText(PostActivity.this, "Image uploaded successfully", Toast.LENGTH_SHORT).show();
 
                     SavingPostInformationToDatabase();
@@ -139,7 +140,7 @@ public class PostActivity extends AppCompatActivity {
 
     private void SavingPostInformationToDatabase() {
 
-        PostsRef.child(current_user_id + postRandomName).setValue(new Posts(current_user_id, saveCurrentTime, saveCurrentDate, downloadUrl, Description, name, FoodName));
+        PostsRef.child(current_user_id + postRandomName).setValue(new Posts(current_user_id, saveCurrentTime, saveCurrentDate, downloadUrl, Description, name, FoodName, photoKey));
 
         //SendUserToMainActivity();
         SendUserToNearbyFoods();
