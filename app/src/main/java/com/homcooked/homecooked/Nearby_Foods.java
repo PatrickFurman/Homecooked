@@ -148,25 +148,27 @@ public class Nearby_Foods extends AppCompatActivity {
     };
 
     private void loadMore (int i) {
-        Query query = foodsRef.orderByChild("Latitude").limitToFirst(i);
+        Query query = postsRef.orderByChild("time").limitToFirst(i);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             // Scans the string version of the data and fills in TextViews with results
-            /*
+
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 lv = findViewById(R.id.list);
+                lv.setAdapter(lv.getAdapter());
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     TextView view = new TextView(getApplicationContext());
-                    String viewText = child.child("foodName").getValue(String.class) +
-                            "\n" + child.child("description").getValue(String.class);
-                    view.setText(viewText);
-                    view.setTag(child.child("postimage").getValue(String.class));
+                    view.setTag(R.integer.PhotoKey, child.child("postimage").getValue(String.class));
+                    view.setTag(R.integer.Name, child.child("foodName").getValue(String.class));
+                    view.setTag(R.integer.Description, child.child("description").getValue(String.class));
+                    view.setTag(R.integer.Seller, child.child("uid").getValue(String.class));
+                    view.setText(view.getTag(R.integer.Name) + "\n" + view.getTag(R.integer.Description));
                     view.setOnClickListener(listener);
                     lv.addHeaderView(view);
                     lv.setAdapter(lv.getAdapter());
                 }
             }
-            */
+            /*
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 lv = findViewById(R.id.list);
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
@@ -181,6 +183,7 @@ public class Nearby_Foods extends AppCompatActivity {
                     lv.setAdapter(lv.getAdapter());
                 }
             }
+            */
 
             @Override
             // Displaying error message if necessary
