@@ -10,8 +10,8 @@
         android:id="@+id/post_image"
         android:layout_width="172dp"
         android:layout_height="131dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginLeft="30dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="138dp"
         android:layout_marginRight="138dp"
@@ -31,12 +31,12 @@
     <TextView
         android:id="@+id/post_description"
         android:layout_width="327dp"
-        android:layout_height="188dp"
-        android:layout_marginStart="29dp"
-        android:layout_marginLeft="29dp"
+        android:layout_height="103dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
         android:layout_marginEnd="17dp"
         android:layout_marginRight="17dp"
-        android:layout_marginBottom="68dp"
+        android:layout_marginBottom="204dp"
         android:ems="10"
         android:hint="Description"
         android:inputType="none"
@@ -48,9 +48,9 @@
     <TextView
         android:id="@+id/email"
         android:layout_width="330dp"
-        android:layout_height="63dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
+        android:layout_height="34dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
@@ -58,8 +58,10 @@
         android:text="email"
         app:layout_constraintBottom_toTopOf="@+id/post_description"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/post_image" />
+        app:layout_constraintTop_toBottomOf="@+id/post_image"
+        app:layout_constraintVertical_bias="0.056" />
 
 
 </android.support.constraint.ConstraintLayout>

@@ -15,12 +15,14 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="194dp"
-        android:ems="10"
-        android:hint="@string/email"
-        android:inputType="textPersonName"
-        tools:targetApi="o"
         android:autofillHints=""
-        android:drawableStart="@drawable/ic_action_email" />
+        android:drawableStart="@drawable/ic_action_email"
+        android:ems="10"
+        android:hint="Email"
+        android:inputType="textPersonName"
+        android:textColor="@color/common_google_signin_btn_text_dark_default"
+        android:textColorHint="#fff"
+        tools:targetApi="o" />
 
     <TextView
         android:id="@+id/Login"
@@ -41,11 +43,13 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:autofillHints=""
+        android:drawableStart="@drawable/ic_action_password"
         android:ems="10"
-        android:hint="@string/password"
+        android:hint="Password"
         android:inputType="textPassword"
-        tools:targetApi="o"
-        android:drawableStart="@drawable/ic_action_password" />
+        android:textColor="@color/common_google_signin_btn_text_dark_default"
+        android:textColorHint="#fff"
+        tools:targetApi="o" />
 
     <android.support.v7.widget.CardView
         android:id="@+id/Sign_in"
