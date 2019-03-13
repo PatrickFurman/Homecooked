@@ -91,6 +91,7 @@ public class Nearby_Foods extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nearby__foods);
         textViewList = new ArrayList<>();
+        // TODO change the color of listView and maybe the text so it's more in line with login page
         loadMore(startValue);
         loadMoreButton = new TextView(this);
         int id = generateViewId();
@@ -110,7 +111,7 @@ public class Nearby_Foods extends AppCompatActivity {
     }
 
     private void loadMore (int i) {
-        Query query = postsRef.orderByChild("time").limitToFirst(i);
+        Query query = postsRef.orderByChild("date").limitToFirst(i);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -123,6 +124,7 @@ public class Nearby_Foods extends AppCompatActivity {
                 textViewList.clear();
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     TextView view = new TextView(getApplicationContext());
+                    // TODO might need to change "postimage" to "photoKey"
                     if (child.child("postimage").getValue(String.class) == null)
                         view.setTag(R.integer.PhotoKey, "No photo found");
                     else
@@ -139,12 +141,14 @@ public class Nearby_Foods extends AppCompatActivity {
                         view.setTag(R.integer.Seller, "Seller unknown");
                     else
                         view.setTag(R.integer.Seller, child.child("uid").getValue(String.class));
-                    view.setText(view.getTag(R.integer.Name) + "\n" + view.getTag(R.integer.Description));
+                    String viewText = view.getTag(R.integer.Name) + "\n" + view.getTag(R.integer.Description);
+                    view.setText(viewText);
                     textViewList.add(view);
                     viewList.add(view.getText().toString());
                 }
                 // Updating listView
                 lv.setAdapter(arrayAdapter);
+                // Finding the seller for the view clicked and starting view foods for that food
                 lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                     @Override
@@ -156,7 +160,7 @@ public class Nearby_Foods extends AppCompatActivity {
                                 new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                        sellerEmail = dataSnapshot.child("email").getValue().toString();
+                                        sellerEmail = dataSnapshot.child("email").getValue(String.class);
                                     }
 
                                     @Override
