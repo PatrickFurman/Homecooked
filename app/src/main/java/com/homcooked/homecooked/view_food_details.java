@@ -12,12 +12,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -39,10 +33,9 @@ public class view_food_details extends AppCompatActivity {
         food_image = findViewById(R.id.post_image);
         // retrieving info on what to display
         Intent intent = getIntent();
-        String description = intent.getStringExtra("Food details");
-        String foodName = intent.getStringExtra("Food name");
+        String description = intent.getStringExtra("Food details") + intent.getStringExtra("Food name");
         String sellerEmail = intent.getStringExtra("Seller email");
-        storageRef.child("Post Images").child(intent.getStringExtra("PhotoKey")).getBytes(1024*1024*5)
+        storageRef.child("Post Images").child(intent.getStringExtra("PhotoKey")).getBytes(1024*1024*7)
                 .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                     @Override
                     public void onSuccess(byte[] bytes) {
@@ -57,8 +50,7 @@ public class view_food_details extends AppCompatActivity {
             }
         });
         // updating layout
-        food_description.setText(foodName + "\n" + description);
+        food_description.setText(description);
         email.setText(sellerEmail);
-
     }
 }
