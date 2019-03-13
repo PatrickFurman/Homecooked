@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -31,6 +33,7 @@ public class Nearby_Foods extends AppCompatActivity {
     private DatabaseReference usersRef = rootRef.child("Users");
     TextView loadMoreButton;
     ListView lv;
+    ArrayList<TextView> textViewList;
     int startValue = 8;
     String sellerEmail;
     // Use if we go back to location based searching
@@ -87,51 +90,24 @@ public class Nearby_Foods extends AppCompatActivity {
     protected  void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nearby__foods);
+        textViewList = new ArrayList<>();
         loadMore(startValue);
         loadMoreButton = new TextView(this);
         int id = generateViewId();
         loadMoreButton.setId(id);
         loadMoreButton.setText(R.string.load_more);
+        loadMoreButton.setTextSize(20);
+        loadMoreButton.setGravity(Gravity.CENTER_HORIZONTAL);
         loadMoreButton.setTextAlignment(TEXT_ALIGNMENT_CENTER);
         ((ListView)findViewById(R.id.list)).addFooterView(loadMoreButton);
         findViewById(id).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startValue += 3;
+                startValue += 5;
                 loadMore(startValue);
             }
         });
     }
-
-    protected void onStart() {
-        super.onStart();
-    }
-
-    private View.OnClickListener listener = new View.OnClickListener() {
-        public void onClick(View v) {
-            Intent intent = new Intent(getApplicationContext(), view_food_details.class);
-            usersRef.child(v.getTag(R.integer.Seller).toString()).addListenerForSingleValueEvent(
-                    new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                   sellerEmail = dataSnapshot.child("email").getValue().toString();
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                    Toast.makeText(getApplicationContext(), "Seller email not found",
-                            Toast.LENGTH_LONG).show();
-                }
-            });
-            if (sellerEmail == null)
-                sellerEmail = "Error 404 Email not found";
-            intent.putExtra("Food details", v.getTag(R.integer.Description).toString());
-            intent.putExtra("Food name", v.getTag(R.integer.Name).toString());
-            intent.putExtra("Seller email", sellerEmail);
-            intent.putExtra("PhotoKey", v.getTag(R.integer.PhotoKey).toString());
-            startActivity(intent);
-        }
-    };
 
     private void loadMore (int i) {
         Query query = postsRef.orderByChild("time").limitToFirst(i);
@@ -140,44 +116,65 @@ public class Nearby_Foods extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 lv = findViewById(R.id.list);
                 List<String> viewList = new ArrayList<>();
-                // Might need to change list_row to a full listView layout
                 ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
                         getApplicationContext(), R.layout.list_row, viewList);
-                // Clearing listView to avoid duplicates
+                // Clearing lists to avoid duplicates
                 lv.setAdapter(arrayAdapter);
-                // for reference https://stackoverflow.com/questions/5070830/populating-a-listview-using-an-arraylist
-                // also https://androidexample.com/How_To_Create_A_Custom_Listview_-_Android_Example/index.php?view=article_discription&aid=67&aaid=92
+                textViewList.clear();
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     TextView view = new TextView(getApplicationContext());
-                    view.setTag(R.integer.PhotoKey, child.child("postimage").getValue(String.class));
-                    view.setTag(R.integer.Name, child.child("foodName").getValue(String.class));
-                    view.setTag(R.integer.Description, child.child("description").getValue(String.class));
-                    view.setTag(R.integer.Seller, child.child("uid").getValue(String.class));
+                    if (child.child("postimage").getValue(String.class) == null)
+                        view.setTag(R.integer.PhotoKey, "No photo found");
+                    else
+                        view.setTag(R.integer.PhotoKey, child.child("postimage").getValue(String.class));
+                    if (child.child("foodName").getValue(String.class) == null)
+                        view.setTag(R.integer.Name, "No name given");
+                    else
+                        view.setTag(R.integer.Name, child.child("foodName").getValue(String.class));
+                    if (child.child("description").getValue(String.class) == null)
+                        view.setTag(R.integer.Description, "No description given");
+                    else
+                        view.setTag(R.integer.Description, child.child("description").getValue(String.class));
+                    if (child.child("uid").getValue(String.class) == null)
+                        view.setTag(R.integer.Seller, "Seller unknown");
+                    else
+                        view.setTag(R.integer.Seller, child.child("uid").getValue(String.class));
                     view.setText(view.getTag(R.integer.Name) + "\n" + view.getTag(R.integer.Description));
-                    view.setOnClickListener(listener);
+                    textViewList.add(view);
                     viewList.add(view.getText().toString());
                 }
                 // Updating listView
                 lv.setAdapter(arrayAdapter);
-            }
+                lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-            /*
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                lv = findViewById(R.id.list);
-                for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    TextView view = new TextView(getApplicationContext());
-                    view.setTag(R.integer.PhotoKey, child.child("PhotoKey").getValue(String.class));
-                    view.setTag(R.integer.Name, child.getKey());
-                    view.setTag(R.integer.Description, child.child("Description").getValue(String.class));
-                    view.setTag(R.integer.Seller, child.child("Seller").getValue(String.class));
-                    view.setText(view.getTag(R.integer.Name) + "\n" + view.getTag(R.integer.Description));
-                    view.setOnClickListener(listener);
-                    lv.addHeaderView(view);
-                    lv.setAdapter(lv.getAdapter());
-                }
-            }
-            */
+                    @Override
+                    public void onItemClick(AdapterView<?> arg0, View view, int position,
+                                            long id) {
+                        TextView v = textViewList.get(position);
+                        Intent intent = new Intent(getApplicationContext(), view_food_details.class);
+                        usersRef.child(v.getTag(R.integer.Seller).toString()).addListenerForSingleValueEvent(
+                                new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        sellerEmail = dataSnapshot.child("email").getValue().toString();
+                                    }
 
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                        Toast.makeText(getApplicationContext(), "Seller email not found",
+                                                Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                        if (sellerEmail == null)
+                            sellerEmail = "Error 404 Email not found";
+                        intent.putExtra("Food details", v.getTag(R.integer.Description).toString());
+                        intent.putExtra("Food name", v.getTag(R.integer.Name).toString());
+                        intent.putExtra("Seller email", sellerEmail);
+                        intent.putExtra("PhotoKey", v.getTag(R.integer.PhotoKey).toString());
+                        startActivity(intent);
+                    }
+                });
+            }
 
         @Override
             // Displaying error message if necessary
