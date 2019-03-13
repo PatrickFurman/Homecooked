@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -22,7 +24,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
     EditText Name;
     EditText Password;
-    Button btnLogin;
+    TextView btnSign_up;
+    CardView btnSign_in;
     Button create_Account;
     private FirebaseAuth mAuth;
     ProgressDialog dialog;
@@ -34,19 +37,24 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
         Name = findViewById(R.id.etName);
         Password = findViewById(R.id.etPassword);
-        btnLogin = findViewById(R.id.btnLogin);
+        btnSign_in = findViewById(R.id.Sign_in);
+        btnSign_up = findViewById(R.id.Sign_up);
         create_Account = findViewById(R.id.button);
         create_Account.setOnClickListener(listener);
-
-        btnLogin.setOnClickListener(this);
+        btnSign_in.setOnClickListener(this);
+        btnSign_up.setOnClickListener(this);
         dialog = new ProgressDialog(this);
         mAuth = FirebaseAuth.getInstance();
     }
 
     @Override
     public void onClick(View view) {
-        if(view.getId() == R.id.btnLogin) {
+        if(view.getId() == R.id.Sign_in) {
             loginUser(Name.getText().toString(), Password.getText().toString());
+        }
+        if(view.getId() == R.id.Sign_up){
+            Intent intent = new Intent(Login.this, Account_Creation.class);
+            startActivity(intent);
         }
     }
 
@@ -67,7 +75,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                             Toast.makeText(getApplicationContext(), "Signing in", Toast.LENGTH_LONG).show();
                             Intent intent = new Intent(Login.this, Nearby_Foods.class);
                             startActivity(intent);
-                            finish();
+                            //finish();
                         } else {
                             Toast.makeText(getApplicationContext(), "Wrong email or password.", Toast.LENGTH_SHORT).show();
                         }
