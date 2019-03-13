@@ -161,6 +161,7 @@ public class Nearby_Foods extends AppCompatActivity {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                         sellerEmail = dataSnapshot.child("email").getValue(String.class);
+                                        String sellerUsername = dataSnapshot.child("name").getValue(String.class);
                                     }
 
                                     @Override
