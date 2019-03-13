@@ -26,7 +26,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     EditText Password;
     TextView btnSign_up;
     CardView btnSign_in;
-    Button create_Account;
     private FirebaseAuth mAuth;
     ProgressDialog dialog;
 
@@ -39,8 +38,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         Password = findViewById(R.id.etPassword);
         btnSign_in = findViewById(R.id.Sign_in);
         btnSign_up = findViewById(R.id.Sign_up);
-        create_Account = findViewById(R.id.button);
-        create_Account.setOnClickListener(listener);
+
         btnSign_in.setOnClickListener(this);
         btnSign_up.setOnClickListener(this);
         dialog = new ProgressDialog(this);
@@ -83,11 +81,4 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
                 });
     }
-
-    private View.OnClickListener listener = new View.OnClickListener() {
-        public void onClick(View v) {
-            Intent intent = new Intent(getApplicationContext(), Account_Creation.class);
-            startActivity(intent);
-        }
-    };
 }

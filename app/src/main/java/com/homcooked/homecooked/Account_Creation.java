@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -29,16 +30,18 @@ public class Account_Creation extends AppCompatActivity {
     private String firstName;
     private String lastName;
     private String email;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account__creation);
         auth = FirebaseAuth.getInstance();
+
     }
 
     protected void onStart() {
         super.onStart();
-        findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.create).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // retrieve user input info from account creation screen
