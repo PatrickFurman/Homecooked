@@ -35,7 +35,7 @@ public class view_food_details extends AppCompatActivity {
         Intent intent = getIntent();
         String description = "Name: " + intent.getStringExtra("Food name") + "\nDescription: " +
                 intent.getStringExtra("Food details");
-        String sellerEmail = R.string.seller_contact_info + intent.getStringExtra("Seller email");
+        String sellerEmail = intent.getStringExtra("Seller email");
         storageRef.child("Post Images").child(intent.getStringExtra("PhotoKey")).getBytes(1024*1024*7)
                 .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                     @Override

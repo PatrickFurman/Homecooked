@@ -1,6 +1,7 @@
 package com.homcooked.homecooked;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -98,6 +99,7 @@ public class Nearby_Foods extends AppCompatActivity {
         loadMoreButton.setId(id);
         loadMoreButton.setText(R.string.load_more);
         loadMoreButton.setTextSize(20);
+        loadMoreButton.setTextColor(Color.BLACK);
         loadMoreButton.setGravity(Gravity.CENTER_HORIZONTAL);
         loadMoreButton.setTextAlignment(TEXT_ALIGNMENT_CENTER);
         ((ListView)findViewById(R.id.list)).addFooterView(loadMoreButton);
@@ -161,7 +163,6 @@ public class Nearby_Foods extends AppCompatActivity {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                         sellerEmail = dataSnapshot.child("email").getValue(String.class);
-                                        String sellerUsername = dataSnapshot.child("name").getValue(String.class);
                                     }
 
                                     @Override
