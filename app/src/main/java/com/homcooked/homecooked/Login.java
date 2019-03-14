@@ -71,7 +71,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                         dialog.dismiss();
                         if (task.isSuccessful()) {
                             Toast.makeText(getApplicationContext(), "Signing in", Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(Login.this, Nearby_Foods.class);
+                            //Intent intent = new Intent(Login.this, Nearby_Foods.class);
+                            Intent intent = new Intent(Login.this, MainActivity.class);
                             startActivity(intent);
                             //finish();
                         } else {
