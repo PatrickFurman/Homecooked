@@ -126,11 +126,10 @@ public class Nearby_Foods extends AppCompatActivity {
                 textViewList.clear();
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     TextView view = new TextView(getApplicationContext());
-                    // TODO might need to change "postimage" to "photoKey"
-                    if (child.child("postimage").getValue(String.class) == null)
+                    if (child.child("photoKey").getValue(String.class) == null)
                         view.setTag(R.integer.PhotoKey, "No photo found");
                     else
-                        view.setTag(R.integer.PhotoKey, child.child("postimage").getValue(String.class));
+                        view.setTag(R.integer.PhotoKey, child.child("photoKey").getValue(String.class));
                     if (child.child("foodName").getValue(String.class) == null)
                         view.setTag(R.integer.Name, "No name given");
                     else
