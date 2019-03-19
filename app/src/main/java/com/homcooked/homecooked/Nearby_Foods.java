@@ -30,7 +30,6 @@ public class Nearby_Foods extends AppCompatActivity {
     // private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
     private DatabaseReference postsRef = rootRef.child("Posts");
-    // private DatabaseReference foodsRef = rootRef.child("Foods");
     private DatabaseReference usersRef = rootRef.child("Users");
     TextView loadMoreButton;
     ListView lv;
@@ -71,20 +70,6 @@ public class Nearby_Foods extends AppCompatActivity {
                         Toast.LENGTH_LONG).show();
             }
         }
-        loadMore(startValue);
-        loadMoreButton = new TextView(this);
-        int id = generateViewId();
-        loadMoreButton.setId(id);
-        loadMoreButton.setText(R.string.load_more);
-        loadMoreButton.setTextAlignment(TEXT_ALIGNMENT_CENTER);
-        ((ListView)findViewById(R.id.list)).addFooterView(loadMoreButton);
-        findViewById(id).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startValue += 3;
-                loadMore(startValue);
-            }
-        });
     }
     */
 
@@ -174,6 +159,7 @@ public class Nearby_Foods extends AppCompatActivity {
                             sellerEmail = "Error 404 Email not found";
                         intent.putExtra("Food details", v.getTag(R.integer.Description).toString());
                         intent.putExtra("Food name", v.getTag(R.integer.Name).toString());
+                        intent.putExtra("Seller name", v.getTag(R.integer.Seller).toString());
                         intent.putExtra("Seller email", sellerEmail);
                         intent.putExtra("PhotoKey", v.getTag(R.integer.PhotoKey).toString());
                         startActivity(intent);

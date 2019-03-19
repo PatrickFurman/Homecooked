@@ -7,16 +7,20 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 public class view_food_details extends AppCompatActivity {
     StorageReference storageRef;
+    DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
     // getting views from layout
     TextView food_description;
     TextView email;
@@ -35,6 +39,7 @@ public class view_food_details extends AppCompatActivity {
         Intent intent = getIntent();
         String description = "Name: " + intent.getStringExtra("Food name") + "\nDescription: " +
                 intent.getStringExtra("Food details");
+        final String sellerName = intent.getStringExtra("Seller name");
         String sellerEmail = intent.getStringExtra("Seller email");
         storageRef.child("Post Images").child(intent.getStringExtra("PhotoKey")).getBytes(1024*1024*7)
                 .addOnSuccessListener(new OnSuccessListener<byte[]>() {
@@ -53,5 +58,15 @@ public class view_food_details extends AppCompatActivity {
         // updating layout
         food_description.setText(description);
         email.setText(sellerEmail);
+        RatingBar ratingBar = findViewById(R.id.ratingBar);
+        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                int intRating = (int) rating;
+                ratingBar.setNumStars(intRating);
+                DatabaseReference sellerRef = rootRef.child("Users").child(sellerName);
+                sellerRef.child("Rating").setValue(intRating);
+            }
+        });
     }
 }

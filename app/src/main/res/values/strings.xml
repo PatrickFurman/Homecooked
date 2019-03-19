@@ -17,5 +17,6 @@
     <string name="seller_contact_info">Contact Info: \\n</string>
     <string name="description">Description</string>
     <string name="image_description">Picture of the food being sold</string>
+    <string name="feedback_prompt">Leave a review</string>
     >>>>>>> da3db47f4e78d9d3a296357510f1c9152461e598
 </resources>
