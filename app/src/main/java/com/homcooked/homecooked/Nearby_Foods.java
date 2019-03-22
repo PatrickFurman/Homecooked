@@ -9,7 +9,9 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.firebase.database.DataSnapshot;
@@ -33,9 +35,11 @@ public class Nearby_Foods extends AppCompatActivity {
     private DatabaseReference usersRef = rootRef.child("Users");
     TextView loadMoreButton;
     ListView lv;
+    Spinner spinner;
     ArrayList<TextView> textViewList;
     int startValue = 8;
     String sellerEmail;
+    String sortType;
     // Use if we go back to location based searching
     /*
     double latitude;
@@ -77,7 +81,27 @@ public class Nearby_Foods extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nearby__foods);
         textViewList = new ArrayList<>();
-        // TODO change the color of listView and maybe the text so it's more in line with login page
+        /*
+        spinner = findViewById(R.id.filters);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.search_options, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // set a variable to use when ordering postsRef query based on selected item
+                EditText editText = (EditText)view;
+                String temp = editText.getText().toString();
+                if (temp.equals("Time"))
+                    sortType = "date";
+                else if (temp.equals("Type"))
+                    sortType = "Description";
+                else if (temp.equals("Location"))
+                    sortType = "date"; // TODO update to something else later
+            }
+        });
+        */
         loadMore(startValue);
         loadMoreButton = new TextView(this);
         int id = generateViewId();
