@@ -7,19 +7,21 @@
     <string name="textview">TextView</string>
     <string name="sign_in">Sign In</string>
     <string name="register_here">Register Here</string>
-    =======
+=======
     <string name="error">Error:</string>
     <string name="location_error">Couldn\'t find location, make sure location services are turned on</string>
     <string name="blank"></string>
     <string name="account_created">Registration Successful</string>
     <string name="load_more">Load more...</string>
     <string name="load_more_button">loadMoreButton</string>
-
-    =======
     <string name="seller_contact_info">Contact Info: \\n</string>
     <string name="description">Description</string>
     <string name="image_description">Picture of the food being sold</string>
     <string name="feedback_prompt">Leave a review</string>
-    >>>>>>> efa17fc3e045bd16078e11bb63aead34553e42d4
+    <string-array name="search_options">
+        <item>Time</item>
+        <item>Type</item>
+        <item>Location</item>
+    </string-array>
     >>>>>>> da3db47f4e78d9d3a296357510f1c9152461e598
 </resources>

@@ -97,8 +97,11 @@ public class Account_Creation extends AppCompatActivity {
                                     }
                                 }
                             });
-                    User user = new User(username, firstName, lastName, email, password);
-                    usersRef.child(auth.getCurrentUser().getUid()).setValue(user);
+                    usersRef.child(auth.getCurrentUser().getUid()).child("name").setValue(username);
+                    usersRef.child(auth.getCurrentUser().getUid()).child("email").setValue(email);
+                    usersRef.child(auth.getCurrentUser().getUid()).child("password").setValue(password);
+                    usersRef.child(auth.getCurrentUser().getUid()).child("numReviews").setValue(0);
+                    usersRef.child(auth.getCurrentUser().getUid()).child("totalRating").setValue(0);
                     startNearbyFoods();
                 }
             }
