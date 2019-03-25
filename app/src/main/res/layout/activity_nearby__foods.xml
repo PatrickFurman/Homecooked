@@ -22,5 +22,3 @@
         android:stretchColumns="1"></ListView>
 
 </LinearLayout>
-
-

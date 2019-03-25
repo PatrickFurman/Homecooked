@@ -49,7 +49,7 @@ public class PostActivity extends AppCompatActivity {
     private DatabaseReference UsersRef, PostsRef;
     private FirebaseAuth mAuth;
 
-    private String saveCurrentDate, saveCurrentTime, postRandomName, downloadUrl, current_user_id, name, photoKey;
+    private String saveCurrentDate, saveCurrentTime, postRandomName, downloadUrl, current_user_id, userName, photoKey;
 
 
     @Override
@@ -59,7 +59,7 @@ public class PostActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         current_user_id = mAuth.getCurrentUser().getUid();
-        name = mAuth.getCurrentUser().getDisplayName();
+        //userName = mAuth.getCurrentUser().getDisplayName();
 
         PostsImagesReference = FirebaseStorage.getInstance().getReference();
         UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
@@ -140,51 +140,26 @@ public class PostActivity extends AppCompatActivity {
 
     private void SavingPostInformationToDatabase() {
 
-        PostsRef.child(current_user_id + postRandomName).setValue(new Posts(current_user_id, saveCurrentTime, saveCurrentDate, downloadUrl, Description, name, FoodName, photoKey));
-
-        //SendUserToMainActivity();
-        SendUserToNearbyFoods();
-
-        /*   UsersRef.child(current_user_id).addValueEventListener(new ValueEventListener() {
+        final DatabaseReference ref = UsersRef.child(current_user_id);
+        ref.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists())  {
-                    String name = dataSnapshot.child("name").getValue().toString();
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                //User user = dataSnapshot.getValue(User.class);
+                //userName = user.getName();
 
-                    HashMap postsMap = new HashMap();
-                    postsMap.put("uid", current_user_id);
-                    postsMap.put("description", Description);
-                    postsMap.put("postimage", downloadUrl);
-                    postsMap.put("name", name);
-
-                    PostsRef.child(current_user_id + postRandomName).updateChildren(postsMap)
-
-                    //PostsRef.push().setValue(new Posts(current_user_id, saveCurrentDate, saveCurrentTime, downloadUrl, Description, name))
-                    //PostsRef.child(current_user_id + postRandomName).setValue((new Posts(current_user_id, saveCurrentDate, saveCurrentTime, downloadUrl, Description, name)))
-                            .addOnCompleteListener(new OnCompleteListener() {
-                                @Override
-                                public void onComplete(@NonNull Task task)
-                                {
-                                    if(task.isSuccessful())
-                                    {
-                                        SendUserToMainActivity();
-                                        Toast.makeText(PostActivity.this, "Post has been uploaded successfully.", Toast.LENGTH_SHORT).show();
-                                    }
-                                    else
-                                    {
-                                        Toast.makeText(PostActivity.this, "Error occurred while uploading post.", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
-                }
+                userName = dataSnapshot.child("name").getValue().toString();
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });   */
+        });
 
+        PostsRef.child(current_user_id + postRandomName).setValue(new Posts(current_user_id, saveCurrentTime, saveCurrentDate, downloadUrl, Description, userName, FoodName, photoKey));
+
+        SendUserToMainActivity();
+        //SendUserToNearbyFoods();
 
     }
 

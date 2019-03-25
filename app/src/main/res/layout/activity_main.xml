@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,7 +7,23 @@
     tools:context=".MainActivity">
 
 
+    <Button
+        android:id="@+id/view_food_button"
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="73dp"
+        android:text="View Food" />
 
-    <include layout="@layout/content_main" />
-
-</android.support.v4.widget.DrawerLayout>
+    <Button
+        android:id="@+id/post_food_button"
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:layout_alignStart="@+id/view_food_button"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="3dp"
+        android:layout_marginBottom="116dp"
+        android:text="Post Food" />
+</RelativeLayout>

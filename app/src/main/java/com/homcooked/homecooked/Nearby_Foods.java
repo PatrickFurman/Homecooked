@@ -1,6 +1,7 @@
 package com.homcooked.homecooked;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -29,7 +30,6 @@ public class Nearby_Foods extends AppCompatActivity {
     // private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
     private DatabaseReference postsRef = rootRef.child("Posts");
-    // private DatabaseReference foodsRef = rootRef.child("Foods");
     private DatabaseReference usersRef = rootRef.child("Users");
     TextView loadMoreButton;
     ListView lv;
@@ -70,20 +70,6 @@ public class Nearby_Foods extends AppCompatActivity {
                         Toast.LENGTH_LONG).show();
             }
         }
-        loadMore(startValue);
-        loadMoreButton = new TextView(this);
-        int id = generateViewId();
-        loadMoreButton.setId(id);
-        loadMoreButton.setText(R.string.load_more);
-        loadMoreButton.setTextAlignment(TEXT_ALIGNMENT_CENTER);
-        ((ListView)findViewById(R.id.list)).addFooterView(loadMoreButton);
-        findViewById(id).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startValue += 3;
-                loadMore(startValue);
-            }
-        });
     }
     */
 
@@ -91,12 +77,14 @@ public class Nearby_Foods extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nearby__foods);
         textViewList = new ArrayList<>();
+        // TODO change the color of listView and maybe the text so it's more in line with login page
         loadMore(startValue);
         loadMoreButton = new TextView(this);
         int id = generateViewId();
         loadMoreButton.setId(id);
         loadMoreButton.setText(R.string.load_more);
         loadMoreButton.setTextSize(20);
+        loadMoreButton.setTextColor(Color.BLACK);
         loadMoreButton.setGravity(Gravity.CENTER_HORIZONTAL);
         loadMoreButton.setTextAlignment(TEXT_ALIGNMENT_CENTER);
         ((ListView)findViewById(R.id.list)).addFooterView(loadMoreButton);
@@ -110,7 +98,7 @@ public class Nearby_Foods extends AppCompatActivity {
     }
 
     private void loadMore (int i) {
-        Query query = postsRef.orderByChild("time").limitToFirst(i);
+        Query query = postsRef.orderByChild("date").limitToFirst(i);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -123,10 +111,10 @@ public class Nearby_Foods extends AppCompatActivity {
                 textViewList.clear();
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     TextView view = new TextView(getApplicationContext());
-                    if (child.child("postimage").getValue(String.class) == null)
+                    if (child.child("photoKey").getValue(String.class) == null)
                         view.setTag(R.integer.PhotoKey, "No photo found");
                     else
-                        view.setTag(R.integer.PhotoKey, child.child("postimage").getValue(String.class));
+                        view.setTag(R.integer.PhotoKey, child.child("photoKey").getValue(String.class));
                     if (child.child("foodName").getValue(String.class) == null)
                         view.setTag(R.integer.Name, "No name given");
                     else
@@ -139,12 +127,14 @@ public class Nearby_Foods extends AppCompatActivity {
                         view.setTag(R.integer.Seller, "Seller unknown");
                     else
                         view.setTag(R.integer.Seller, child.child("uid").getValue(String.class));
-                    view.setText(view.getTag(R.integer.Name) + "\n" + view.getTag(R.integer.Description));
+                    String viewText = view.getTag(R.integer.Name) + "\n" + view.getTag(R.integer.Description);
+                    view.setText(viewText);
                     textViewList.add(view);
                     viewList.add(view.getText().toString());
                 }
                 // Updating listView
                 lv.setAdapter(arrayAdapter);
+                // Finding the seller for the view clicked and starting view foods for that food
                 lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                     @Override
@@ -156,7 +146,7 @@ public class Nearby_Foods extends AppCompatActivity {
                                 new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                        sellerEmail = dataSnapshot.child("email").getValue().toString();
+                                        sellerEmail = dataSnapshot.child("email").getValue(String.class);
                                     }
 
                                     @Override
@@ -169,6 +159,7 @@ public class Nearby_Foods extends AppCompatActivity {
                             sellerEmail = "Error 404 Email not found";
                         intent.putExtra("Food details", v.getTag(R.integer.Description).toString());
                         intent.putExtra("Food name", v.getTag(R.integer.Name).toString());
+                        intent.putExtra("Seller name", v.getTag(R.integer.Seller).toString());
                         intent.putExtra("Seller email", sellerEmail);
                         intent.putExtra("PhotoKey", v.getTag(R.integer.PhotoKey).toString());
                         startActivity(intent);
