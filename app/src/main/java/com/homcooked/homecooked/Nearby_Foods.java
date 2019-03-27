@@ -39,6 +39,7 @@ public class Nearby_Foods extends AppCompatActivity {
     ArrayList<TextView> textViewList;
     int startValue = 8;
     String sellerEmail;
+    String sellerName;
     String sortType;
     // Use if we go back to location based searching
     /*
@@ -151,6 +152,7 @@ public class Nearby_Foods extends AppCompatActivity {
                         view.setTag(R.integer.Seller, "Seller unknown");
                     else
                         view.setTag(R.integer.Seller, child.child("uid").getValue(String.class));
+                    view.setTag(R.integer.Parent, child.getKey());
                     String viewText = view.getTag(R.integer.Name) + "\n" + view.getTag(R.integer.Description);
                     view.setText(viewText);
                     textViewList.add(view);
@@ -171,6 +173,7 @@ public class Nearby_Foods extends AppCompatActivity {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                         sellerEmail = dataSnapshot.child("email").getValue(String.class);
+                                        sellerName = dataSnapshot.child("name").getValue(String.class);
                                     }
 
                                     @Override
@@ -181,11 +184,15 @@ public class Nearby_Foods extends AppCompatActivity {
                                 });
                         if (sellerEmail == null)
                             sellerEmail = "Error 404 Email not found";
+                        if (sellerName == null)
+                            sellerName = "Error 404 Name not found";
                         intent.putExtra("Food details", v.getTag(R.integer.Description).toString());
                         intent.putExtra("Food name", v.getTag(R.integer.Name).toString());
-                        intent.putExtra("Seller name", v.getTag(R.integer.Seller).toString());
+                        intent.putExtra("Seller name", sellerName);
+                        intent.putExtra("Seller uid", v.getTag(R.integer.Seller).toString());
                         intent.putExtra("Seller email", sellerEmail);
                         intent.putExtra("PhotoKey", v.getTag(R.integer.PhotoKey).toString());
+                        intent.putExtra("Post name", v.getTag(R.integer.Parent).toString());
                         startActivity(intent);
                     }
                 });

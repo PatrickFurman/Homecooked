@@ -6,6 +6,9 @@ import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -28,32 +31,30 @@ public class view_food_details extends AppCompatActivity {
     StorageReference storageRef;
     DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
     User seller;
-    String sellerUsername;
+    String postName;
+    Intent intent;
     // getting views from layout
     TextView food_description;
     TextView email;
-    TextView ratingIndicator;
     ImageView food_image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_food_details);
-        Intent intent = getIntent();
         // Initializing variables
+        Intent i = getIntent();
+        postName = i.getStringExtra("Post name");
         storageRef = FirebaseStorage.getInstance().getReference();
         food_description = findViewById(R.id.post_description);
         email = findViewById(R.id.email);
-        ratingIndicator = findViewById(R.id.ratingIndicator);
         food_image = findViewById(R.id.post_image);
-        seller = new User(intent.getStringExtra("Seller name"), intent.getStringExtra("Seller email"));
-        RatingBar ratingBar = findViewById(R.id.ratingBar);
+        seller = new User(i.getStringExtra("Seller name"), i.getStringExtra("Seller email"));
+        seller.setUserId(i.getStringExtra("Seller uid"));
         // retrieving info on what to display
-        String description = "Name: " + intent.getStringExtra("Food name") + "\nDescription: " +
-                intent.getStringExtra("Food details");
-        final String sellerName = intent.getStringExtra("Seller name");
-        String sellerEmail = intent.getStringExtra("Seller email");
-        storageRef.child("Post Images").child(intent.getStringExtra("PhotoKey")).getBytes(1024*1024*7)
+        String description = "Name: " + i.getStringExtra("Food name") + "\nDescription: " +
+                i.getStringExtra("Food details");
+        storageRef.child("Post Images").child(i.getStringExtra("PhotoKey")).getBytes(1024*1024*7)
                 .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                     @Override
                     public void onSuccess(byte[] bytes) {
@@ -67,14 +68,40 @@ public class view_food_details extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Photo not found", Toast.LENGTH_LONG).show();
             }
         });
-        // Getting initial review info for seller
-        final DatabaseReference sellerRef = rootRef.child("Users").child(sellerName);
-        sellerRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+        findViewById(R.id.feedbackButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startFeedbackActivity();
+            }
+        });
+        findViewById(R.id.viewFeedbackButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startViewReviews();
+            }
+        });
+        // updating layout
+        food_description.setText(description);
+        email.setText("Seller name: " + seller.getName() + "\nSeller email: " + seller.getEmail());
+
+    }
+
+    private void startFeedbackActivity() {
+        intent = new Intent(this, FeedbackActivity.class);
+        intent.putExtra("Seller name", seller.getName());
+        intent.putExtra("Seller uid", seller.getUserID());
+        intent.putExtra("Post name", postName);
+        startActivity(intent);
+    }
+
+    private void startViewReviews() {
+        intent = new Intent(this, ViewReviews.class);
+        intent.putExtra("Seller name", seller.getName());
+        rootRef.child("Users").child(seller.getName()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                seller.setNumReviews(dataSnapshot.child("numReviews").getValue(Integer.class));
-                seller.setTotalRating(dataSnapshot.child("totalRating").getValue(Integer.class));
-                sellerUsername = dataSnapshot.child("name").getValue(String.class);
+                intent.putExtra("Seller rating", dataSnapshot.child("rating").getValue(Integer.class));
             }
 
             @Override
@@ -82,23 +109,7 @@ public class view_food_details extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), databaseError.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
-        // updating layout
-        food_description.setText(description);
-        email.setText("Seller name: " + sellerUsername + "\nSeller email: " + sellerEmail);
-        // Updating seller review info when rating changed
-        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            @Override
-            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                int intRating = (int) rating;
-                ratingBar.setRating(intRating);
-                seller.setTotalRating(seller.getTotalRating() + intRating);
-                seller.setNumReviews(seller.getNumReviews() + 1);
-                sellerRef.child("rating").setValue(Math.round(seller.getTotalRating() / seller.getNumReviews()));
-                sellerRef.child("numReviews").setValue(seller.getNumReviews());
-                sellerRef.child("totalRating").setValue(seller.getTotalRating());
-                ratingIndicator.setText("Seller's Rating: " + seller.getTotalRating() / seller.getNumReviews());
-                ratingBar.setIsIndicator(true);
-            }
-        });
+        intent.putExtra("Post name", postName);
+        startActivity(intent);
     }
 }

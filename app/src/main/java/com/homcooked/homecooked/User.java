@@ -15,9 +15,14 @@ public class User {
         this.email = email;
         this.password = password;
     }
+
     public User (String name, String email) {
         this.username = name;
         this.email = email;
+    }
+
+    public User (String name) {
+        this.username = name;
     }
 
     public int getRating() {return rating;}
@@ -40,8 +45,8 @@ public class User {
 
     public String getUserID() {return userID; }
 
-    public void setUserID(String userID) {
-        this.userID = userID;
+    public void setUserId(String uid) {
+        this.userID = uid;
     }
 
     public void setRating(int rating) {
