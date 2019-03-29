@@ -98,7 +98,7 @@ public class view_food_details extends AppCompatActivity {
     private void startViewReviews() {
         intent = new Intent(this, ViewReviews.class);
         intent.putExtra("Seller name", seller.getName());
-        rootRef.child("Users").child(seller.getName()).addListenerForSingleValueEvent(new ValueEventListener() {
+        rootRef.child("Users").child(seller.getUserID()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 intent.putExtra("Seller rating", dataSnapshot.child("rating").getValue(Integer.class));

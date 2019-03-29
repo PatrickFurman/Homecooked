@@ -29,7 +29,7 @@ public class ViewReviews extends AppCompatActivity {
         Intent intent = getIntent();
         String post = intent.getStringExtra("Post name");
         nameView.setText("Seller: " + intent.getStringExtra("Seller name"));
-        ratingView.setText("Average Rating: " + intent.getStringExtra("Seller rating"));
+        ratingView.setText("Average Rating: " + intent.getIntExtra("Seller rating", 9999));
         rootRef.child("Posts").child(post).child("Reviews").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -40,17 +40,14 @@ public class ViewReviews extends AppCompatActivity {
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     viewList.add(child.getValue(String.class));
                 }
+                if (viewList.isEmpty())
+                    viewList.add("No reviews yet for this food");
                 lv.setAdapter(arrayAdapter);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                lv = findViewById(R.id.reviewList);
-                List<String> viewList = new ArrayList<>();
-                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
-                        getApplicationContext(), R.layout.list_row, viewList);
-                viewList.add("No reviews yet for this food");
-                lv.setAdapter(arrayAdapter);
+
             }
         });
     }
