@@ -82,27 +82,31 @@ public class Nearby_Foods extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nearby__foods);
         textViewList = new ArrayList<>();
-        /*
         spinner = findViewById(R.id.filters);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.search_options, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
-        spinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 // set a variable to use when ordering postsRef query based on selected item
-                EditText editText = (EditText)view;
-                String temp = editText.getText().toString();
+                String temp = parent.getItemAtPosition(position).toString();
                 if (temp.equals("Time"))
-                    sortType = "date";
+                    sortType = "date/";
                 else if (temp.equals("Type"))
-                    sortType = "Description";
+                    sortType = "description/";
                 else if (temp.equals("Location"))
                     sortType = "date"; // TODO update to something else later
+                else if (temp.equals("A to Z"))
+                    sortType = "foodName/";
+                loadMore(startValue);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
-        */
         loadMore(startValue);
         loadMoreButton = new TextView(this);
         int id = generateViewId();
@@ -123,7 +127,9 @@ public class Nearby_Foods extends AppCompatActivity {
     }
 
     private void loadMore (int i) {
-        Query query = postsRef.orderByChild("date").limitToFirst(i);
+        if (sortType == null)
+            sortType = "date";
+        Query query = postsRef.orderByChild(sortType).limitToFirst(i);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -158,6 +164,16 @@ public class Nearby_Foods extends AppCompatActivity {
                     textViewList.add(view);
                     viewList.add(view.getText().toString());
                 }
+                // reorder list
+                /*
+                for (String s: viewList) {
+                    int j = 0;
+                    while (s.compareTo(viewList.get(j)) > 0) {
+                        viewList.set(viewList.indexOf(s), viewList.get(j));
+                        viewList.set(j, s);
+                    }
+                }
+                */
                 // Updating listView
                 lv.setAdapter(arrayAdapter);
                 // Finding the seller for the view clicked and starting view foods for that food

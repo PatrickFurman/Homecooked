@@ -22,6 +22,8 @@
         <item>Time</item>
         <item>Type</item>
         <item>Location</item>
-    </string-array>
+        <item>A to Z</item>
+    </string-array><![CDATA[
     >>>>>>> da3db47f4e78d9d3a296357510f1c9152461e598
+]]>
 </resources>

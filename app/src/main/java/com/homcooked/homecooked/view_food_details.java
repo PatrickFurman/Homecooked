@@ -1,5 +1,6 @@
 package com.homcooked.homecooked;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -37,6 +38,7 @@ public class view_food_details extends AppCompatActivity {
     TextView food_description;
     TextView email;
     ImageView food_image;
+    int rating;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,13 +74,13 @@ public class view_food_details extends AppCompatActivity {
         findViewById(R.id.feedbackButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startFeedbackActivity();
+                startNextActivity(FeedbackActivity.class);
             }
         });
         findViewById(R.id.viewFeedbackButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startViewReviews();
+                startNextActivity(ViewReviews.class);
             }
         });
         // updating layout
@@ -87,28 +89,10 @@ public class view_food_details extends AppCompatActivity {
 
     }
 
-    private void startFeedbackActivity() {
-        intent = new Intent(this, FeedbackActivity.class);
+    private void startNextActivity(Class activity) {
+        intent = new Intent(this, activity);
         intent.putExtra("Seller name", seller.getName());
         intent.putExtra("Seller uid", seller.getUserID());
-        intent.putExtra("Post name", postName);
-        startActivity(intent);
-    }
-
-    private void startViewReviews() {
-        intent = new Intent(this, ViewReviews.class);
-        intent.putExtra("Seller name", seller.getName());
-        rootRef.child("Users").child(seller.getUserID()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                intent.putExtra("Seller rating", dataSnapshot.child("rating").getValue(Integer.class));
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(getApplicationContext(), databaseError.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
         intent.putExtra("Post name", postName);
         startActivity(intent);
     }
