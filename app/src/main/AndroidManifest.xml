@@ -23,12 +23,20 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".Nearby_Foods" />
         <activity android:name=".view_food_details" />
+        
         <activity android:name=".ProfileActivity"></activity>
         <activity android:name=".view_food_details"
             tools:ignore="DuplicateActivity"></activity>
         <activity android:name=".PostActivity"></activity>
         <activity android:name=".UsersPosts"></activity>
         <activity android:name=".DeletePost"></activity>
+
+        <activity android:name=".ProfileActivity" />
+        <activity
+            android:name=".view_food_details"
+            tools:ignore="DuplicateActivity" />
+        <activity android:name=".FeedbackActivity" />
+        <activity android:name=".ViewReviews"></activity>
     </application>
 
 </manifest>

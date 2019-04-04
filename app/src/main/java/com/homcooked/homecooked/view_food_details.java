@@ -6,21 +6,21 @@ import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 public class view_food_details extends AppCompatActivity {
     StorageReference storageRef;
-    DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+    User seller;
+    String postName;
+    Intent intent;
     // getting views from layout
     TextView food_description;
     TextView email;
@@ -31,17 +31,18 @@ public class view_food_details extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_food_details);
         // Initializing variables
+        Intent i = getIntent();
+        postName = i.getStringExtra("Post name");
         storageRef = FirebaseStorage.getInstance().getReference();
         food_description = findViewById(R.id.post_description);
         email = findViewById(R.id.email);
         food_image = findViewById(R.id.post_image);
+        seller = new User(i.getStringExtra("Seller name"), i.getStringExtra("Seller email"));
+        seller.setUserId(i.getStringExtra("Seller uid"));
         // retrieving info on what to display
-        Intent intent = getIntent();
-        String description = "Name: " + intent.getStringExtra("Food name") + "\nDescription: " +
-                intent.getStringExtra("Food details");
-        final String sellerName = intent.getStringExtra("Seller name");
-        String sellerEmail = intent.getStringExtra("Seller email");
-        storageRef.child("Post Images").child(intent.getStringExtra("PhotoKey")).getBytes(1024*1024*7)
+        String description = "Name: " + i.getStringExtra("Food name") + "\nDescription: " +
+                i.getStringExtra("Food details");
+        storageRef.child("Post Images").child(i.getStringExtra("PhotoKey")).getBytes(1024*1024*7)
                 .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                     @Override
                     public void onSuccess(byte[] bytes) {
@@ -55,18 +56,29 @@ public class view_food_details extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Photo not found", Toast.LENGTH_LONG).show();
             }
         });
-        // updating layout
-        food_description.setText(description);
-        email.setText(sellerEmail);
-        RatingBar ratingBar = findViewById(R.id.ratingBar);
-        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+
+        findViewById(R.id.feedbackButton).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                int intRating = (int) rating;
-                ratingBar.setNumStars(intRating);
-                DatabaseReference sellerRef = rootRef.child("Users").child(sellerName);
-                sellerRef.child("Rating").setValue(intRating);
+            public void onClick(View view) {
+                startNextActivity(FeedbackActivity.class);
             }
         });
+        findViewById(R.id.viewFeedbackButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startNextActivity(ViewReviews.class);
+            }
+        });
+        // updating layout
+        food_description.setText(description);
+        email.setText("Seller name: " + seller.getName() + "\nSeller email: " + seller.getEmail());
+    }
+
+    private void startNextActivity(Class activity) {
+        intent = new Intent(this, activity);
+        intent.putExtra("Seller name", seller.getName());
+        intent.putExtra("Seller uid", seller.getUserID());
+        intent.putExtra("Post name", postName);
+        startActivity(intent);
     }
 }
