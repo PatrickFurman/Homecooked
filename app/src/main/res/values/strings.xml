@@ -7,7 +7,7 @@
     <string name="textview">TextView</string>
     <string name="sign_in">Sign In</string>
     <string name="register_here">Register Here</string>
-=======
+    =======
     <string name="error">Error:</string>
     <string name="location_error">Couldn\'t find location, make sure location services are turned on</string>
     <string name="blank"></string>

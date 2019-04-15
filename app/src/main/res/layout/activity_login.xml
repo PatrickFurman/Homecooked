@@ -13,7 +13,6 @@
         android:layout_width="200dp"
         android:layout_height="40dp"
         android:layout_above="@+id/etPassword"
-        android:layout_below="@+id/Login"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="75dp"
         android:layout_marginBottom="45dp"
@@ -25,18 +24,6 @@
         android:textColor="@color/common_google_signin_btn_text_dark_default"
         android:textColorHint="#fff"
         tools:targetApi="o" />
-
-    <TextView
-        android:id="@+id/Login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="85dp"
-        android:text="@string/login"
-        android:textAllCaps="true"
-        android:textSize="24sp"
-        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/etPassword"
@@ -83,13 +70,40 @@
 
     <TextView
         android:id="@+id/Sign_up"
-        android:layout_width="wrap_content"
+        android:layout_width="127dp"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/Login"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="-21dp"
-        android:layout_marginBottom="105dp"
+        android:layout_marginStart="140dp"
+        android:layout_marginEnd="140dp"
+        android:layout_marginBottom="97dp"
+        android:gravity="center"
         android:text="@string/register_here"
         android:textColor="@color/common_google_signin_btn_text_dark_pressed"
         android:textSize="18sp" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="212dp"
+        android:layout_height="177dp"
+        android:layout_alignStart="@+id/etName"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="-5dp"
+        android:layout_marginTop="18dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/chef_hat"
+        android:contentDescription="TODO" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_marginTop="143dp"
+        android:text="Homecooked"
+        android:textColor="@android:color/holo_orange_light" />
+
 </RelativeLayout>

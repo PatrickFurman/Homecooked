@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Login">
+        <activity android:name=".WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,10 +23,13 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".Nearby_Foods" />
         <activity android:name=".view_food_details" />
-        <activity android:name=".ProfileActivity"></activity>
-        <activity android:name=".view_food_details"
-            tools:ignore="DuplicateActivity"></activity>
-        <activity android:name=".PostActivity"></activity>
+        <activity android:name=".ProfileActivity" />
+        <activity
+            android:name=".view_food_details"
+            tools:ignore="DuplicateActivity" />
+        <activity android:name=".PostActivity" />
+        <activity android:name=".Login" />
+        <activity android:name=".Profile_Edit_Activity"></activity>
     </application>
 
 </manifest>
