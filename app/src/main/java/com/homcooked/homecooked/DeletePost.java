@@ -23,12 +23,13 @@ import com.google.firebase.storage.StorageReference;
 
 public class DeletePost extends AppCompatActivity {
     StorageReference storageRef;
-    DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+    private DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+    private DatabaseReference postRef = rootRef.child("Posts");
+    private DatabaseReference DeletedPostsRef = rootRef.child("Deleted Posts");
     // getting views from layout
     TextView food_description;
     TextView email;
     ImageView food_image;
-    DatabaseReference postRef = rootRef.child("Posts");
     //FirebaseAuth mAuth;
     private String currentUserID;
     private String postID;
@@ -82,6 +83,11 @@ public class DeletePost extends AppCompatActivity {
     }
 
     private void DeleteCurrentPost() {
+        Intent intent = getIntent();
+        DeletedPostsRef.child(postID).setValue(new Posts(currentUserID, null, null, null,
+                intent.getStringExtra("Food details"), intent.getStringExtra("Seller name"),
+                intent.getStringExtra("Food name"), intent.getStringExtra("PhotoKey")));
+
         postRef.child(postID).removeValue();
         SendUserToMainActivity();
         Toast.makeText(this, "Post deleted.", Toast.LENGTH_SHORT).show();
