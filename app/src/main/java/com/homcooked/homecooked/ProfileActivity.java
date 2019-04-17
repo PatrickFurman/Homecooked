@@ -1,5 +1,6 @@
 package com.homcooked.homecooked;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,40 +17,48 @@ import com.google.firebase.database.ValueEventListener;
 public class ProfileActivity extends AppCompatActivity {
 
     TextView username;
+    TextView userEmail;
 
     private FirebaseDatabase mDatabase;
-    private DatabaseReference mDatabaseRef;
+    private DatabaseReference mDatabaseRef, userRef;
     private FirebaseAuth auth;
     private FirebaseAuth.AuthStateListener authListener;
-    private String userID;
-
+    private String currentUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+        username = findViewById(R.id.name);
+        userEmail = findViewById(R.id.email);
+        Intent intent = getIntent();
 
         auth = FirebaseAuth.getInstance();
-        mDatabase = FirebaseDatabase.getInstance();
-        mDatabaseRef = mDatabase.getReference();
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference();
         FirebaseUser user = auth.getCurrentUser();
-        //userID = user.getUid();
+        currentUser = user.getUid();
+        userRef = mDatabaseRef.child("Users").child(currentUser);
+        userRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                //for (DataSnapshot ds : dataSnapshot.getChildren()){
 
-            FirebaseAuth.AuthStateListener authListener = new FirebaseAuth.AuthStateListener() {
+                    String name = dataSnapshot.child("name").getValue().toString();
+                    String email = dataSnapshot.child("email").getValue().toString();
+                    username.setText(name);
+                    userEmail.setText(email);
+                //}
+            }
 
-                @Override
-                public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                    FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-                    if(firebaseUser != null){
-                        //String userID = firebaseUser.getUid();
-                        String userEmail = firebaseUser.getEmail();
-                        username.setText(userEmail);
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+
 
                     }
                 }
-            };
-                }
-        }//;
 
-    //}
-
-//}
