@@ -30,7 +30,7 @@
         <activity android:name=".PostActivity"></activity>
         <activity android:name=".UsersPosts"></activity>
         <activity android:name=".DeletePost"></activity>
-        
+
         <activity
             android:name=".view_food_details"
             tools:ignore="DuplicateActivity" />
