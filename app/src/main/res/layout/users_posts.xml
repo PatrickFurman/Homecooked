@@ -9,21 +9,10 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Nearby Foods"
+        android:text="Your Posts"
         android:layout_gravity="center_horizontal"
         android:textSize="24sp"
         android:textStyle="bold" />
-
-    <SearchView
-        android:id="@+id/searchBar"
-        android:layout_width="match_parent"
-        android:layout_height="35dp" />
-
-    <Spinner
-        android:id="@+id/filters"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:entries="@array/search_options" />
 
     <ListView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/list"

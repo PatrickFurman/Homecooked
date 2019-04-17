@@ -30,10 +30,10 @@
     <TextView
         android:id="@+id/post_description"
         android:layout_width="327dp"
-        android:layout_height="75dp"
+        android:layout_height="103dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="17dp"
-        android:layout_marginBottom="236dp"
+        android:layout_marginBottom="204dp"
         android:ems="10"
         android:hint="@string/description"
         android:inputType="none"
@@ -59,42 +59,18 @@
         app:layout_constraintVertical_bias="0.285" />
 
     <Button
-        android:id="@+id/feedbackButton"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="64dp"
-        android:layout_marginTop="64dp"
-        android:layout_marginEnd="64dp"
-        android:layout_marginBottom="64dp"
-        android:fontFamily="sans-serif"
-        android:text="Leave a Review"
-        android:textAllCaps="false"
-        android:textSize="18sp"
+        android:id="@+id/delete_post_button"
+        android:layout_width="216dp"
+        android:layout_height="89dp"
+        android:layout_marginStart="70dp"
+        android:layout_marginTop="33dp"
+        android:layout_marginEnd="98dp"
+        android:layout_marginBottom="82dp"
+        android:text="Delete Post"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/post_description"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <Button
-        android:id="@+id/viewFeedbackButton"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="24dp"
-        android:fontFamily="sans-serif"
-        android:text="View Reviews"
-        android:textAllCaps="false"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/feedbackButton"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/post_description" />
 
 
 </android.support.constraint.ConstraintLayout>

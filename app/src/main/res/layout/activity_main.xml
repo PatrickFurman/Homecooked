@@ -14,16 +14,28 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="0dp"
-        android:layout_marginTop="73dp"
+        android:layout_marginTop="15dp"
         android:text="View Food" />
 
     <Button
         android:id="@+id/post_food_button"
         android:layout_width="match_parent"
         android:layout_height="140dp"
+
+        android:layout_alignStart="@+id/view_food_button"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="166dp"
+        android:layout_marginBottom="100dp"
+        android:text="Post Food" />
+
+    <Button
+        android:id="@+id/users_posts_button"
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
         android:layout_alignStart="@+id/view_food_button"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="3dp"
-        android:layout_marginBottom="116dp"
-        android:text="Post Food" />
+        android:layout_marginStart="0dp"
+        android:layout_marginBottom="42dp"
+        android:text="Your Posts" />
 </RelativeLayout>

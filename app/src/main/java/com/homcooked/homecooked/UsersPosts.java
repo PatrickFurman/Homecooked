@@ -9,12 +9,11 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.SearchView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,101 +27,26 @@ import java.util.List;
 import static android.view.View.TEXT_ALIGNMENT_CENTER;
 import static android.view.View.generateViewId;
 
-public class Nearby_Foods extends AppCompatActivity {
-    // private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
-    // private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
+public class UsersPosts extends AppCompatActivity {
     private DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
     private DatabaseReference postsRef = rootRef.child("Posts");
     private DatabaseReference usersRef = rootRef.child("Users");
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     TextView loadMoreButton;
     ListView lv;
-    Spinner spinner;
-    SearchView searchBar;
     ArrayList<TextView> textViewList;
     int startValue = 8;
     String sellerEmail;
-    String sellerName;
-    String sortType;
-    // Use if we go back to location based searching
-    /*
-    double latitude;
-    double longitude;
-    private FusedLocationProviderClient mFusedLocationClient;
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_nearby__foods);
-        if(ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                        FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            try {
-                mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-                mFusedLocationClient.getLastLocation()
-                        .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                            @Override
-                            public void onSuccess(Location location) {
-                                // Got last known location. In some rare situations this can be null.
-                                if (location != null) {
-                                    latitude = location.getLatitude();
-                                    longitude = location.getLongitude();
-                                } else {
-                                    Toast.makeText(getApplicationContext(), R.string.location_error,
-                                            Toast.LENGTH_LONG).show();
-                                }
-                            }
-                        });
-            } catch (Exception e) {
-                Toast.makeText(getApplicationContext(), R.string.error + e.getMessage(),
-                        Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-    */
+    String currentUserID;
 
     protected  void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_nearby__foods);
+        currentUserID = mAuth.getCurrentUser().getUid();
+
+        setContentView(R.layout.users_posts);
         textViewList = new ArrayList<>();
-        spinner = findViewById(R.id.filters);
-        searchBar = findViewById(R.id.searchBar);
-        searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                loadMore(startValue, query);
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.search_options, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                // set a variable to use when ordering postsRef query based on selected item
-                String temp = parent.getItemAtPosition(position).toString();
-                if (temp.equals("Time"))
-                    sortType = "date/";
-                else if (temp.equals("Type"))
-                    sortType = "description/";
-                else if (temp.equals("Location"))
-                    sortType = "date"; // TODO update to something else later
-                else if (temp.equals("A to Z"))
-                    sortType = "foodName/";
-                loadMore(startValue, null);
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-        loadMore(startValue, null);
+        // TODO change the color of listView and maybe the text so it's more in line with login page
+        loadMore(startValue);
         loadMoreButton = new TextView(this);
         int id = generateViewId();
         loadMoreButton.setId(id);
@@ -136,19 +60,13 @@ public class Nearby_Foods extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startValue += 5;
-                loadMore(startValue, null);
+                loadMore(startValue);
             }
         });
     }
 
-    private void loadMore (int i, String s) {
-        if (sortType == null)
-            sortType = "date";
-        Query query;
-        if (s == null)
-            query = postsRef.orderByChild(sortType).limitToFirst(i);
-        else
-            query = postsRef.orderByChild("foodName").equalTo(s).limitToFirst(i);
+    private void loadMore (int i) {
+        Query query = postsRef.startAt(null, currentUserID).orderByChild("date").limitToFirst(i);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -177,13 +95,11 @@ public class Nearby_Foods extends AppCompatActivity {
                         view.setTag(R.integer.Seller, "Seller unknown");
                     else
                         view.setTag(R.integer.Seller, child.child("uid").getValue(String.class));
-                    view.setTag(R.integer.Parent, child.getKey());
                     String viewText = view.getTag(R.integer.Name) + "\n" + view.getTag(R.integer.Description);
                     view.setText(viewText);
                     textViewList.add(view);
                     viewList.add(view.getText().toString());
                 }
-
                 // Updating listView
                 lv.setAdapter(arrayAdapter);
                 // Finding the seller for the view clicked and starting view foods for that food
@@ -193,13 +109,12 @@ public class Nearby_Foods extends AppCompatActivity {
                     public void onItemClick(AdapterView<?> arg0, View view, int position,
                                             long id) {
                         TextView v = textViewList.get(position);
-                        Intent intent = new Intent(getApplicationContext(), view_food_details.class);
+                        Intent intent = new Intent(getApplicationContext(), DeletePost.class);
                         usersRef.child(v.getTag(R.integer.Seller).toString()).addListenerForSingleValueEvent(
                                 new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                         sellerEmail = dataSnapshot.child("email").getValue(String.class);
-                                        sellerName = dataSnapshot.child("name").getValue(String.class);
                                     }
 
                                     @Override
@@ -210,21 +125,18 @@ public class Nearby_Foods extends AppCompatActivity {
                                 });
                         if (sellerEmail == null)
                             sellerEmail = "Error 404 Email not found";
-                        if (sellerName == null)
-                            sellerName = "Error 404 Name not found";
                         intent.putExtra("Food details", v.getTag(R.integer.Description).toString());
                         intent.putExtra("Food name", v.getTag(R.integer.Name).toString());
-                        intent.putExtra("Seller name", sellerName);
-                        intent.putExtra("Seller uid", v.getTag(R.integer.Seller).toString());
+                        intent.putExtra("Seller name", v.getTag(R.integer.Seller).toString());
                         intent.putExtra("Seller email", sellerEmail);
                         intent.putExtra("PhotoKey", v.getTag(R.integer.PhotoKey).toString());
-                        intent.putExtra("Post name", v.getTag(R.integer.Parent).toString());
+                        intent.putExtra("uid", currentUserID);
                         startActivity(intent);
                     }
                 });
             }
 
-        @Override
+            @Override
             // Displaying error message if necessary
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Toast.makeText(getApplicationContext(), R.string.error +

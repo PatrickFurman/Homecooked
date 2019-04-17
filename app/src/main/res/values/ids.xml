@@ -12,4 +12,7 @@
     <integer
         name="Seller"
         value="3"/>
+    <integer
+        name="Parent"
+        value="4"/>
 </resources>
