@@ -66,7 +66,8 @@ public class UsersPosts extends AppCompatActivity {
     }
 
     private void loadMore (int i) {
-        Query query = postsRef.startAt(null, currentUserID).orderByChild("date").limitToFirst(i);
+        //Query query = postsRef.startAt(null, currentUserID).orderByChild("date").limitToFirst(i);
+        Query query = postsRef.orderByChild("uid").startAt(currentUserID).endAt(currentUserID + "\uf8ff").limitToFirst(i);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
