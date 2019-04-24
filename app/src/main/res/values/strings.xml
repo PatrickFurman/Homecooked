@@ -19,10 +19,9 @@
     <string name="image_description">Picture of the food being sold</string>
     <string name="feedback_prompt">Leave a review</string>
     <string-array name="search_options">
+        <item>A to Z (Name)</item>
+        <item>A to Z (Description)</item>
         <item>Time</item>
-        <item>Type</item>
-        <item>Location</item>
-        <item>A to Z</item>
     </string-array><![CDATA[
     >>>>>>> da3db47f4e78d9d3a296357510f1c9152461e598
 ]]>

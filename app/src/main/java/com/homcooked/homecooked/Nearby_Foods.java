@@ -89,12 +89,14 @@ public class Nearby_Foods extends AppCompatActivity {
         searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                loadMore(startValue, query);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                if (newText.isEmpty())
+                    loadMore(startValue, null);
+                loadMore(startValue, newText);
                 return false;
             }
         });
@@ -108,13 +110,11 @@ public class Nearby_Foods extends AppCompatActivity {
                 // set a variable to use when ordering postsRef query based on selected item
                 String temp = parent.getItemAtPosition(position).toString();
                 if (temp.equals("Time"))
-                    sortType = "date/";
-                else if (temp.equals("Type"))
-                    sortType = "description/";
-                else if (temp.equals("Location"))
-                    sortType = "date"; // TODO update to something else later
-                else if (temp.equals("A to Z"))
-                    sortType = "foodName/";
+                    sortType = "date";
+                else if (temp.equals("A to Z (Description)"))
+                    sortType = "description";
+                else if (temp.equals("A to Z (Name)"))
+                    sortType = "foodName";
                 loadMore(startValue, null);
             }
             @Override
@@ -148,7 +148,7 @@ public class Nearby_Foods extends AppCompatActivity {
         if (s == null)
             query = postsRef.orderByChild(sortType).limitToFirst(i);
         else
-            query = postsRef.orderByChild("foodName").equalTo(s).limitToFirst(i);
+            query = postsRef.orderByChild("foodName").startAt(s).limitToFirst(i);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
