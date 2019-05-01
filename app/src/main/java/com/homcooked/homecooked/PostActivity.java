@@ -140,7 +140,7 @@ public class PostActivity extends AppCompatActivity {
 
     private void SavingPostInformationToDatabase() {
 
-        final DatabaseReference ref = UsersRef.child(current_user_id);
+        /*final DatabaseReference ref = UsersRef.child(current_user_id);
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -156,7 +156,23 @@ public class PostActivity extends AppCompatActivity {
             }
         });
 
-        PostsRef.child(current_user_id + postRandomName).setValue(new Posts(current_user_id, saveCurrentTime, saveCurrentDate, downloadUrl, Description, userName, FoodName, photoKey));
+*/
+        DatabaseReference ref = UsersRef.child(current_user_id).child("name");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                PostsRef.child(current_user_id + postRandomName).setValue(new Posts(current_user_id, saveCurrentTime, saveCurrentDate,
+                        downloadUrl, Description, userName, FoodName, photoKey));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        //PostsRef.child(current_user_id + postRandomName).setValue(new Posts(current_user_id, saveCurrentTime, saveCurrentDate,
+                //downloadUrl, Description, userName, FoodName, photoKey));
 
         SendUserToMainActivity();
         //SendUserToNearbyFoods();
