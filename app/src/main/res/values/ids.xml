@@ -15,4 +15,13 @@
     <integer
         name="Parent"
         value="4"/>
+    <integer
+        name="Date"
+        value="5"/>
+    <integer
+        name="Latitude"
+        value="6"/>
+    <integer
+        name="Longitude"
+        value="7"/>
 </resources>

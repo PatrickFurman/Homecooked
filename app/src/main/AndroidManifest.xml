@@ -5,6 +5,13 @@
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
+    <!--
+         The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
+         Google Maps Android API v2, but you must specify either coarse or fine
+         location permissions for the 'MyLocation' functionality. 
+    -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -26,15 +33,29 @@
         <activity android:name=".ProfileActivity" />
         <activity android:name=".PostActivity" />
         <activity android:name=".Login" />
-        <activity android:name=".Profile_Edit_Activity"></activity>
-        <activity android:name=".UsersPosts"></activity>
-        <activity android:name=".DeletePost"></activity>
-
+        <activity android:name=".Profile_Edit_Activity" />
+        <activity android:name=".UsersPosts" />
+        <activity android:name=".DeletePost" />
         <activity
             android:name=".view_food_details"
             tools:ignore="DuplicateActivity" />
         <activity android:name=".FeedbackActivity" />
-        <activity android:name=".ViewReviews"></activity>
+        <activity android:name=".ViewReviews" />
+        <!--
+             The API key for Google Maps-based APIs is defined as a string resource.
+             (See the file "res/values/google_maps_api.xml").
+             Note that the API key is linked to the encryption key used to sign the APK.
+             You need a different API key for each encryption key, including the release key that is used to
+             sign the APK for publishing.
+             You can define the keys for the debug and release targets in src/debug/ and src/release/. 
+        -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
+        <activity
+            android:name=".foodMap"
+            android:label="@string/title_activity_food_map"></activity>
     </application>
 
 </manifest>

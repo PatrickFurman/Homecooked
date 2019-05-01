@@ -1,8 +1,11 @@
 <TextView android:id="@+id/text"
-    android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:paddingBottom="4dp"
+    android:layout_height="wrap_content"
     android:paddingTop="4dp"
-    android:textSize="18sp"
+    android:paddingBottom="4dp"
     android:textColor="#000000"
+    android:textSize="18sp"
     xmlns:android="http://schemas.android.com/apk/res/android" />
+
+
+
