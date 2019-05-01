@@ -104,7 +104,7 @@ public class Account_Creation extends AppCompatActivity {
                     usersRef.child(auth.getCurrentUser().getUid()).child("totalRating").setValue(0);
                     startNearbyFoods();
                     */
-                    login();
+                    loginAndCreate();
 
                 }
             }
@@ -116,7 +116,7 @@ public class Account_Creation extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void login(){
+    private void loginAndCreate(){
         auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
