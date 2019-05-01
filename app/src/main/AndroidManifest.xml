@@ -26,15 +26,15 @@
         <activity android:name=".ProfileActivity" />
         <activity android:name=".PostActivity" />
         <activity android:name=".Login" />
-        <activity android:name=".Profile_Edit_Activity"></activity>
-        <activity android:name=".UsersPosts"></activity>
-        <activity android:name=".DeletePost"></activity>
-
+        <activity android:name=".Profile_Edit_Activity" />
+        <activity android:name=".UsersPosts" />
+        <activity android:name=".DeletePost" />
         <activity
             android:name=".view_food_details"
             tools:ignore="DuplicateActivity" />
         <activity android:name=".FeedbackActivity" />
-        <activity android:name=".ViewReviews"></activity>
+        <activity android:name=".ViewReviews" />
+        <activity android:name=".View_Profile_Activity"></activity>
     </application>
 
 </manifest>
