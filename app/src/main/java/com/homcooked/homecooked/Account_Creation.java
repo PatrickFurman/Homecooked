@@ -97,12 +97,15 @@ public class Account_Creation extends AppCompatActivity {
                                     }
                                 }
                             });
-                    usersRef.child(auth.getCurrentUser().getUid()).child("name").setValue(username);
+                    /*usersRef.child(auth.getCurrentUser().getUid()).child("name").setValue(username);
                     usersRef.child(auth.getCurrentUser().getUid()).child("email").setValue(email);
                     usersRef.child(auth.getCurrentUser().getUid()).child("password").setValue(password);
                     usersRef.child(auth.getCurrentUser().getUid()).child("numReviews").setValue(0);
                     usersRef.child(auth.getCurrentUser().getUid()).child("totalRating").setValue(0);
                     startNearbyFoods();
+                    */
+                    login();
+
                 }
             }
         });
@@ -111,5 +114,26 @@ public class Account_Creation extends AppCompatActivity {
     private void startNearbyFoods() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+    }
+
+    private void login(){
+        auth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            String uid = auth.getCurrentUser().getUid();
+                            usersRef.child(uid).child("name").setValue(username);
+                            usersRef.child(uid).child("email").setValue(email);
+                            usersRef.child(uid).child("password").setValue(password);
+                            usersRef.child(uid).child("numReviews").setValue(0);
+                            usersRef.child(uid).child("totalRating").setValue(0);
+                            startNearbyFoods();
+                        } else {
+
+                        }
+                    }
+
+                });
     }
 }
