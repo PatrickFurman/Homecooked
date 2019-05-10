@@ -27,9 +27,6 @@ import com.google.firebase.storage.UploadTask;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.HashMap;
-
-import com.homcooked.homecooked.MainActivity;
 
 public class PostActivity extends AppCompatActivity {
 
@@ -204,7 +201,7 @@ public class PostActivity extends AppCompatActivity {
     }
 
     private void SendUserToFoodDetails() {
-        Intent foodDetailsIntent = new Intent(PostActivity.this, view_food_details.class);
+        Intent foodDetailsIntent = new Intent(PostActivity.this, ViewFoodDetails.class);
         startActivity(foodDetailsIntent);
     }
 

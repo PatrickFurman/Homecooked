@@ -13,23 +13,14 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SearchView;
-import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -158,7 +149,7 @@ public class Nearby_Foods extends AppCompatActivity {
         findViewById(R.id.goToMaps).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), foodMap.class);
+                Intent intent = new Intent(getApplicationContext(), FoodMap.class);
                 startActivity(intent);
             }
         });
@@ -228,7 +219,7 @@ public class Nearby_Foods extends AppCompatActivity {
                     public void onItemClick(AdapterView<?> arg0, View view, int position,
                                             long id) {
                         TextView v = textViewList.get(position);
-                        Intent intent = new Intent(getApplicationContext(), view_food_details.class);
+                        Intent intent = new Intent(getApplicationContext(), ViewFoodDetails.class);
                         usersRef.child(v.getTag(R.integer.Seller).toString()).addListenerForSingleValueEvent(
                                 new ValueEventListener() {
                                     @Override

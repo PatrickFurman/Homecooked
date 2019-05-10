@@ -29,7 +29,7 @@
         <activity android:name=".Account_Creation" />
         <activity android:name=".MainActivity" />
         <activity android:name=".Nearby_Foods" />
-        <activity android:name=".view_food_details" />
+        <activity android:name=".ViewFoodDetails" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".PostActivity" />
         <activity android:name=".Login" />
@@ -37,7 +37,7 @@
         <activity android:name=".UsersPosts" />
         <activity android:name=".DeletePost" />
         <activity
-            android:name=".view_food_details"
+            android:name=".ViewFoodDetails"
             tools:ignore="DuplicateActivity" />
         <activity android:name=".FeedbackActivity" />
         <activity android:name=".ViewReviews" />
@@ -54,7 +54,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".foodMap"
+            android:name=".FoodMap"
             android:label="@string/title_activity_food_map"></activity>
     </application>
 

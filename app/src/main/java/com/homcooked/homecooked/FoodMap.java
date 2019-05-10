@@ -1,6 +1,7 @@
 package com.homcooked.homecooked;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.annotation.NonNull;
@@ -19,6 +20,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -31,15 +33,17 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class foodMap extends FragmentActivity implements OnMapReadyCallback {
+public class FoodMap extends FragmentActivity implements OnMapReadyCallback {
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+    private DatabaseReference usersRef = rootRef.child("Users");
     private DatabaseReference postsRef = rootRef.child("Posts");
     private GoogleMap mMap;
-    ArrayList<TextView> viewList;
     double latitude;
     double longitude;
+    String sellerEmail;
+    String sellerName;
     private FusedLocationProviderClient mFusedLocationClient;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,19 +55,43 @@ public class foodMap extends FragmentActivity implements OnMapReadyCallback {
         mapFragment.getMapAsync(this);
     }
 
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                View v = (View) marker.getTag();
+                usersRef.child(v.getTag(R.integer.Seller).toString()).addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                sellerEmail = dataSnapshot.child("email").getValue(String.class);
+                                sellerName = dataSnapshot.child("name").getValue(String.class);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                Toast.makeText(getApplicationContext(), "Seller email not found",
+                                        Toast.LENGTH_LONG).show();
+                            }
+                        });
+                if (sellerEmail == null)
+                    sellerEmail = "Error 404 Email not found";
+                if (sellerName == null)
+                    sellerName = "Error 404 Name not found";
+                Intent intent = new Intent(getApplicationContext(), ViewFoodDetails.class);
+                intent.putExtra("Food details", v.getTag(R.integer.Description).toString());
+                intent.putExtra("Food name", v.getTag(R.integer.Name).toString());
+                intent.putExtra("Seller name", sellerName);
+                intent.putExtra("Seller uid", v.getTag(R.integer.Seller).toString());
+                intent.putExtra("Seller email", sellerEmail);
+                intent.putExtra("PhotoKey", v.getTag(R.integer.PhotoKey).toString());
+                intent.putExtra("Post name", v.getTag(R.integer.Parent).toString());
+                startActivity(intent);
+               return false;
+            }
+        });
         if(ContextCompat.checkSelfPermission(this.getApplicationContext(),
                 COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(this.getApplicationContext(),
@@ -92,8 +120,6 @@ public class foodMap extends FragmentActivity implements OnMapReadyCallback {
         postsRef.orderByChild("latitude").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                viewList = new ArrayList<>();
-
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     TextView view = new TextView(getApplicationContext());
                     if (child.child("photoKey").getValue(String.class) == null)
@@ -129,10 +155,10 @@ public class foodMap extends FragmentActivity implements OnMapReadyCallback {
                     view.setText(viewText);
                     LatLng postLoc = new LatLng(Double.parseDouble(view.getTag(R.integer.Latitude).toString()),
                             Double.parseDouble(view.getTag(R.integer.Longitude).toString()));
-                    mMap.addMarker(new MarkerOptions().position(postLoc).title(view.getTag(R.integer.Name).toString()));
-                    viewList.add(view);
+                    Marker marker;
+                    marker = mMap.addMarker(new MarkerOptions().position(postLoc).title(view.getTag(R.integer.Name).toString()));
+                    marker.setTag(view);
                 }
-
             }
 
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -143,6 +169,7 @@ public class foodMap extends FragmentActivity implements OnMapReadyCallback {
 
         LatLng currentLoc = new LatLng(47.568, -122.321);
         mMap.addMarker(new MarkerOptions().position(currentLoc).title("You are here"));
+        CameraUpdateFactory.zoomTo(5);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLoc));
     }
 }
