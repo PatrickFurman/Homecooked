@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
@@ -61,35 +62,41 @@ public class FoodMap extends FragmentActivity implements OnMapReadyCallback {
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                View v = (View) marker.getTag();
-                usersRef.child(v.getTag(R.integer.Seller).toString()).addListenerForSingleValueEvent(
-                        new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                sellerEmail = dataSnapshot.child("email").getValue(String.class);
-                                sellerName = dataSnapshot.child("name").getValue(String.class);
-                            }
+                TextView v = (TextView) marker.getTag();
+                try {
+                    usersRef.child(v.getTag(R.integer.Seller).toString()).addListenerForSingleValueEvent(
+                            new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    sellerEmail = dataSnapshot.child("email").getValue(String.class);
+                                    sellerName = dataSnapshot.child("name").getValue(String.class);
+                                }
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-                                Toast.makeText(getApplicationContext(), "Seller email not found",
-                                        Toast.LENGTH_LONG).show();
-                            }
-                        });
-                if (sellerEmail == null)
-                    sellerEmail = "Error 404 Email not found";
-                if (sellerName == null)
-                    sellerName = "Error 404 Name not found";
-                Intent intent = new Intent(getApplicationContext(), ViewFoodDetails.class);
-                intent.putExtra("Food details", v.getTag(R.integer.Description).toString());
-                intent.putExtra("Food name", v.getTag(R.integer.Name).toString());
-                intent.putExtra("Seller name", sellerName);
-                intent.putExtra("Seller uid", v.getTag(R.integer.Seller).toString());
-                intent.putExtra("Seller email", sellerEmail);
-                intent.putExtra("PhotoKey", v.getTag(R.integer.PhotoKey).toString());
-                intent.putExtra("Post name", v.getTag(R.integer.Parent).toString());
-                startActivity(intent);
-               return false;
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                    Toast.makeText(getApplicationContext(), "Seller email not found",
+                                            Toast.LENGTH_LONG).show();
+                                }
+                            });
+                    if (sellerEmail == null)
+                        sellerEmail = "Error 404 Email not found";
+                    if (sellerName == null)
+                        sellerName = "Error 404 Name not found";
+                    Intent intent = new Intent(getApplicationContext(), ViewFoodDetails.class);
+                    intent.putExtra("Food details", v.getTag(R.integer.Description).toString());
+                    intent.putExtra("Food name", v.getTag(R.integer.Name).toString());
+                    intent.putExtra("Seller name", sellerName);
+                    intent.putExtra("Seller uid", v.getTag(R.integer.Seller).toString());
+                    intent.putExtra("Seller email", sellerEmail);
+                    intent.putExtra("PhotoKey", v.getTag(R.integer.PhotoKey).toString());
+                    intent.putExtra("Post name", v.getTag(R.integer.Parent).toString());
+                    startActivity(intent);
+                } catch (Exception e) {
+                    Toast.makeText(getApplicationContext(), e.getMessage(),
+                            Toast.LENGTH_LONG).show();
+                    return false;
+                }
+               return true;
             }
         });
         if(ContextCompat.checkSelfPermission(this.getApplicationContext(),
@@ -169,7 +176,7 @@ public class FoodMap extends FragmentActivity implements OnMapReadyCallback {
 
         LatLng currentLoc = new LatLng(47.568, -122.321);
         mMap.addMarker(new MarkerOptions().position(currentLoc).title("You are here"));
-        CameraUpdateFactory.zoomTo(5);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLoc));
+        CameraUpdateFactory.zoomTo(5);
     }
 }

@@ -57,28 +57,8 @@ public class ViewFoodDetails extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.feedbackButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startNextActivity(FeedbackActivity.class);
-            }
-        });
-        findViewById(R.id.viewFeedbackButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startNextActivity(ViewReviews.class);
-            }
-        });
         // updating layout
         food_description.setText(description);
         email.setText("Seller name: " + seller.getName() + "\nSeller email: " + seller.getEmail());
-    }
-
-    private void startNextActivity(Class activity) {
-        intent = new Intent(this, activity);
-        intent.putExtra("Seller name", seller.getName());
-        intent.putExtra("Seller uid", seller.getUserID());
-        intent.putExtra("Post name", postName);
-        startActivity(intent);
     }
 }

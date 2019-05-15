@@ -85,11 +85,6 @@ public class Nearby_Foods extends AppCompatActivity {
         }
         textViewList = new ArrayList<>();
         spinner = findViewById(R.id.filters);
-        /*
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-        */
         searchBar = findViewById(R.id.searchBar);
         searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override

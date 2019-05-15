@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Homecooked</string>
+    <string name="app_name">Lonely Pets 4U</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="sign_up">Sign Up</string>
@@ -19,6 +19,7 @@
     <string name="image_description">Picture of the food being sold</string>
     <string name="feedback_prompt">Leave a review</string>
     <string-array name="search_options">
+        <item>Filters</item>
         <item>A to Z (Name)</item>
         <item>A to Z (Description)</item>
         <item>Location</item>
