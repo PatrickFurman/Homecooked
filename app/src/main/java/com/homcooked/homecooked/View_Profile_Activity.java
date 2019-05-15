@@ -4,9 +4,6 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -17,40 +14,32 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
+public class View_Profile_Activity extends AppCompatActivity {
 
-    TextView profile_name;
-    TextView profile_email;
-    TextView profile_location;
-    TextView profile_description;
-    TextView profile_phone;
-//add phone number, location, and description
-    Button btnEdit;
+    String id;
+    TextView profile_name, profile_email, profile_location, profile_description, profile_phone;
 
-    private FirebaseDatabase mDatabase;
     private DatabaseReference mDatabaseRef, userRef;
     private FirebaseAuth auth;
-    //private FirebaseAuth.AuthStateListener authListener;
-    private String currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        setContentView(R.layout.activity_view__profile_);
+
+        Intent intent = getIntent();
+        id = intent.getStringExtra("Seller uid");
+
         profile_name = findViewById(R.id.name);
         profile_email = findViewById(R.id.email);
         profile_location = findViewById(R.id.profile_location);
         profile_description = findViewById(R.id.profile_description);
         profile_phone = findViewById(R.id.phone);
 
-        btnEdit = findViewById(R.id.btnEdit);
-        btnEdit.setOnClickListener(this);
-
         auth = FirebaseAuth.getInstance();
         mDatabaseRef = FirebaseDatabase.getInstance().getReference();
-        FirebaseUser user = auth.getCurrentUser();
-        currentUser = user.getUid();
-        userRef = mDatabaseRef.child("Profile").child(currentUser);
+        userRef = mDatabaseRef.child("Profile").child(id);
+
         userRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -72,13 +61,4 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             }
         });
     }
-
-    @Override
-    public void onClick(View v) {
-        if(v.getId() == R.id.btnEdit){
-            Intent intent = new Intent(ProfileActivity.this, Profile_Edit_Activity.class);
-            startActivity(intent);
-        }
-    }
 }
-

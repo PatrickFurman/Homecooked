@@ -112,7 +112,7 @@ public class Account_Creation extends AppCompatActivity {
     }
 
     private void startNearbyFoods() {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, Profile_Edit_Activity.class);
         startActivity(intent);
     }
 

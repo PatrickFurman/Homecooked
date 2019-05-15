@@ -9,33 +9,45 @@
 
     <Button
         android:id="@+id/view_food_button"
-        android:layout_width="match_parent"
-        android:layout_height="140dp"
+        android:layout_width="300dp"
+        android:layout_height="100dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginStart="46dp"
+        android:layout_marginTop="29dp"
         android:text="View Food" />
 
     <Button
         android:id="@+id/post_food_button"
-        android:layout_width="match_parent"
-        android:layout_height="140dp"
+        android:layout_width="300dp"
+        android:layout_height="100dp"
 
         android:layout_alignStart="@+id/view_food_button"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="166dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="157dp"
         android:layout_marginBottom="100dp"
         android:text="Post Food" />
 
     <Button
         android:id="@+id/users_posts_button"
-        android:layout_width="match_parent"
-        android:layout_height="140dp"
+        android:layout_width="300dp"
+        android:layout_height="100dp"
         android:layout_alignStart="@+id/view_food_button"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginBottom="42dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginBottom="126dp"
         android:text="Your Posts" />
+
+    <Button
+        android:id="@+id/btnProfile"
+        android:layout_width="99dp"
+        android:layout_height="58dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="145dp"
+        android:layout_marginEnd="140dp"
+        android:layout_marginBottom="38dp"
+        android:text="Profile" />
 </RelativeLayout>

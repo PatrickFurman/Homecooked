@@ -58,5 +58,54 @@
         app:layout_constraintTop_toBottomOf="@+id/post_image"
         app:layout_constraintVertical_bias="0.285" />
 
+<<<<<<< HEAD
+=======
+    <Button
+        android:id="@+id/feedbackButton"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="64dp"
+        android:layout_marginBottom="64dp"
+        android:fontFamily="sans-serif"
+        android:text="Leave a Review"
+        android:textAllCaps="false"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/post_description"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/viewFeedbackButton"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:fontFamily="sans-serif"
+        android:text="View Reviews"
+        android:textAllCaps="false"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/feedbackButton"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/btnProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Profile"
+        tools:layout_editor_absoluteX="254dp"
+        tools:layout_editor_absoluteY="39dp" />
+
+>>>>>>> 1ef1aafc7dc7bcc4f0ffcb96d0522f52832f1f90
 
 </android.support.constraint.ConstraintLayout>
