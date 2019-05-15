@@ -16,7 +16,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-public class view_food_details extends AppCompatActivity {
+public class ViewFoodDetails extends AppCompatActivity {
     StorageReference storageRef;
     User seller;
     String postName;
