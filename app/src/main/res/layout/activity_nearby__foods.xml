@@ -6,6 +6,12 @@
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android" >
 
+    <Button
+        android:id="@+id/goToMaps"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Maps Link for testing" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -25,11 +31,11 @@
         android:layout_height="35dp"
         android:entries="@array/search_options" />
 
-    <ListView xmlns:android="http://schemas.android.com/apk/res/android"
+    <ListView
         android:id="@+id/list"
+        android:layout_width="420dp"
+        android:layout_height="451dp"
         android:layout_gravity="fill"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:stretchColumns="1"></ListView>
 
 </LinearLayout>

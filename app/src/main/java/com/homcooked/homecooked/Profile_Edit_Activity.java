@@ -1,28 +1,22 @@
 package com.homcooked.homecooked;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 public class Profile_Edit_Activity extends AppCompatActivity implements View.OnClickListener {
 
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     private FirebaseAuth auth;
-    String userId;
     private DatabaseReference profileRef = mDatabase.child("Profile");
 
     EditText user_name;
@@ -60,14 +54,14 @@ public class Profile_Edit_Activity extends AppCompatActivity implements View.OnC
                 profile_name = user_name.getText().toString();
                 user_email = findViewById(R.id.user_email);
                 profile_email = user_email.getText().toString();
-                user_location = findViewById(R.id.location);
+                user_location = findViewById(R.id.profile_location);
                 profile_location = user_location.getText().toString();
                 user_phone = findViewById(R.id.phone);
                 profile_phone = user_phone.getText().toString();
                 user_description = findViewById(R.id.user_description);
                 profile_description = user_description.getText().toString();
 
-                profileRef.child(currentUser).setValue(new Profile(profile_name, profile_email, profile_location));
+                profileRef.child(currentUser).setValue(new Profile(profile_name, profile_email, profile_location, profile_phone, profile_description ));
 
                 Intent intent = new Intent(Profile_Edit_Activity.this, MainActivity.class);
                 startActivity(intent);

@@ -32,7 +32,7 @@ public class DeletePost extends AppCompatActivity {
     ImageView food_image;
     //FirebaseAuth mAuth;
     private String currentUserID;
-    private String postID;
+    private String postID, date, time;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +72,8 @@ public class DeletePost extends AppCompatActivity {
         String photokey = intent.getStringExtra("PhotoKey").substring(2);
         String tempPostID = currentUserID + photokey;
         postID = tempPostID.substring(0, tempPostID.length() - 4);
+        date = postID.substring(currentUserID.length(), postID.length() - 5);
+        time = postID.substring(postID.length() - 5, postID.length());
 
         Button deletePostButton = findViewById(R.id.delete_post_button);
         deletePostButton.setOnClickListener(new View.OnClickListener() {
@@ -84,7 +86,7 @@ public class DeletePost extends AppCompatActivity {
 
     private void DeleteCurrentPost() {
         Intent intent = getIntent();
-        DeletedPostsRef.child(postID).setValue(new Posts(currentUserID, null, null, null,
+        DeletedPostsRef.child(postID).setValue(new Posts(currentUserID, time, date, null,
                 intent.getStringExtra("Food details"), intent.getStringExtra("Seller name"),
                 intent.getStringExtra("Food name"), intent.getStringExtra("PhotoKey")));
 
