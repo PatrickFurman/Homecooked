@@ -30,7 +30,7 @@
         <activity android:name=".Account_Creation" />
         <activity android:name=".MainActivity" />
         <activity android:name=".Nearby_Foods" />
-        <activity android:name=".view_food_details" />
+        <activity android:name=".ViewFoodDetails" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".PostActivity" />
         <activity android:name=".Login" />
@@ -52,7 +52,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-
 
     </application>
 
