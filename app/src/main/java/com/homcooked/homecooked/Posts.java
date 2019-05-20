@@ -2,18 +2,21 @@ package com.homcooked.homecooked;
 
 public class Posts {
 
-    public String uid, postimage, description, name, date, time, foodName, photoKey;
+    public String uid, postimage, description, name, date, time, petName, photoKey;
+    public double latitude, longitude;
 
 
-    public Posts(String uid, String time, String date, String postimage, String description, String name, String foodName, String photoKey) {
+    public Posts(String uid, String time, String date, String postimage, String description, String name, String petName, String photoKey, double latitude, double longitude) {
         this.uid = uid;
         this.time = time;
         this.date = date;
         this.postimage = postimage;
         this.description = description;
         this.name = name;
-        this.foodName = foodName;
+        this.petName = petName;
         this.photoKey = photoKey;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public String getUid() {
@@ -24,6 +27,9 @@ public class Posts {
         this.uid = uid;
     }
 
+    public double getLatitude() {return latitude;}
+
+    public void setLatitude(double latitude) {this.latitude = latitude;}
 
     public String getPostimage() {
         return postimage;
@@ -49,7 +55,7 @@ public class Posts {
         this.name = name;
     }
 
-    public String getFoodName() {
-        return foodName;
+    public String getpetName() {
+        return petName;
     }
 }

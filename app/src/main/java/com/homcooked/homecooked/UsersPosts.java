@@ -84,10 +84,10 @@ public class UsersPosts extends AppCompatActivity {
                         view.setTag(R.integer.PhotoKey, "No photo found");
                     else
                         view.setTag(R.integer.PhotoKey, child.child("photoKey").getValue(String.class));
-                    if (child.child("foodName").getValue(String.class) == null)
+                    if (child.child("petName").getValue(String.class) == null)
                         view.setTag(R.integer.Name, "No name given");
                     else
-                        view.setTag(R.integer.Name, child.child("foodName").getValue(String.class));
+                        view.setTag(R.integer.Name, child.child("petName").getValue(String.class));
                     if (child.child("description").getValue(String.class) == null)
                         view.setTag(R.integer.Description, "No description given");
                     else
@@ -103,7 +103,7 @@ public class UsersPosts extends AppCompatActivity {
                 }
                 // Updating listView
                 lv.setAdapter(arrayAdapter);
-                // Finding the seller for the view clicked and starting view foods for that food
+                // Finding the seller for the view clicked and starting view pets for that pet
                 lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                     @Override
@@ -126,8 +126,8 @@ public class UsersPosts extends AppCompatActivity {
                                 });
                         if (sellerEmail == null)
                             sellerEmail = "Error 404 Email not found";
-                        intent.putExtra("Food details", v.getTag(R.integer.Description).toString());
-                        intent.putExtra("Food name", v.getTag(R.integer.Name).toString());
+                        intent.putExtra("pet details", v.getTag(R.integer.Description).toString());
+                        intent.putExtra("pet name", v.getTag(R.integer.Name).toString());
                         intent.putExtra("Seller name", v.getTag(R.integer.Seller).toString());
                         intent.putExtra("Seller email", sellerEmail);
                         intent.putExtra("PhotoKey", v.getTag(R.integer.PhotoKey).toString());

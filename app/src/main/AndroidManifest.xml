@@ -29,8 +29,8 @@
         </activity>
         <activity android:name=".Account_Creation" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".Nearby_Foods" />
-        <activity android:name=".view_food_details" />
+        <activity android:name=".NearbyPets" />
+        <activity android:name=".ViewPetDetails" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".PostActivity" />
         <activity android:name=".Login" />

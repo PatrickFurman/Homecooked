@@ -58,7 +58,7 @@ public class ViewReviews extends AppCompatActivity {
                     viewList.add(child.getValue(String.class));
                 }
                 if (viewList.isEmpty())
-                    viewList.add("No reviews yet for this food");
+                    viewList.add("No reviews yet for this pet");
                 lv.setAdapter(arrayAdapter);
             }
 
