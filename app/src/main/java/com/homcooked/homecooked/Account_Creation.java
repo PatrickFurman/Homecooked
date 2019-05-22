@@ -102,7 +102,7 @@ public class Account_Creation extends AppCompatActivity {
                     usersRef.child(auth.getCurrentUser().getUid()).child("password").setValue(password);
                     usersRef.child(auth.getCurrentUser().getUid()).child("numReviews").setValue(0);
                     usersRef.child(auth.getCurrentUser().getUid()).child("totalRating").setValue(0);
-                    startNearbyFoods();
+                    startNearbypets();
                     */
                     loginAndCreate();
 
@@ -111,8 +111,8 @@ public class Account_Creation extends AppCompatActivity {
         });
     }
 
-    private void startNearbyFoods() {
-        Intent intent = new Intent(this, MainActivity.class);
+    private void startNearbypets() {
+        Intent intent = new Intent(this, Profile_Edit_Activity.class);
         startActivity(intent);
     }
 
@@ -128,7 +128,7 @@ public class Account_Creation extends AppCompatActivity {
                             usersRef.child(uid).child("password").setValue(password);
                             usersRef.child(uid).child("numReviews").setValue(0);
                             usersRef.child(uid).child("totalRating").setValue(0);
-                            startNearbyFoods();
+                            startNearbypets();
                         } else {
 
                         }
