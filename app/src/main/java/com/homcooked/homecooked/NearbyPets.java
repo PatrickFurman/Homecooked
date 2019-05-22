@@ -59,9 +59,7 @@ public class NearbyPets extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nearby_pets);
         if(ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                        FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             try {
                 mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
                 mFusedLocationClient.getLastLocation()
@@ -83,6 +81,8 @@ public class NearbyPets extends AppCompatActivity {
                         Toast.LENGTH_LONG).show();
             }
         }
+        Toast.makeText(getApplicationContext(), "" + latitude + longitude,
+                Toast.LENGTH_LONG).show();
         textViewList = new ArrayList<>();
         spinner = findViewById(R.id.filters);
         searchBar = findViewById(R.id.searchBar);

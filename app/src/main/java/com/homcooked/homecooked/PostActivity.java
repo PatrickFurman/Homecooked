@@ -1,9 +1,11 @@
 package com.homcooked.homecooked;
 
 import android.Manifest;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -18,7 +20,12 @@ import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -34,6 +41,8 @@ import com.google.firebase.storage.UploadTask;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+
+import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
 public class PostActivity extends AppCompatActivity {
 
@@ -54,9 +63,10 @@ public class PostActivity extends AppCompatActivity {
     private StorageReference PostsImagesReference;
     private DatabaseReference UsersRef, PostsRef;
     private FirebaseAuth mAuth;
-    private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
-    private FusedLocationProviderClient mFusedLocationClient;
+    private LocationRequest mLocationRequest;
+    private FusedLocationProviderClient mfusedLocationClient;
+    private LocationCallback locationCallback;
 
     private String saveCurrentDate, saveCurrentTime, postRandomName, downloadUrl, current_user_id, userName, photoKey;
 
@@ -66,30 +76,24 @@ public class PostActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
 
-        if(ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                        FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            try {
-                mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-                mFusedLocationClient.getLastLocation()
-                        .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                            @Override
-                            public void onSuccess(Location location) {
-                                // Got last known location. In some rare situations this can be null.
-                                if (location != null) {
-                                    latitude = location.getLatitude();
-                                    longitude = location.getLongitude();
-                                } else {
-                                    Toast.makeText(getApplicationContext(), R.string.location_error,
-                                            Toast.LENGTH_LONG).show();
-                                }
-                            }
-                        });
-            } catch (Exception e) {
-                Toast.makeText(getApplicationContext(), R.string.error + e.getMessage(),
-                        Toast.LENGTH_LONG).show();
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setNumUpdates(1);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                if (locationResult == null) {
+                    return;
+                }
+                latitude = locationResult.getLastLocation().getLatitude();
+                longitude = locationResult.getLastLocation().getLongitude();
             }
+        };
+        if(ContextCompat.checkSelfPermission(getApplicationContext(),
+                FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            mfusedLocationClient.requestLocationUpdates(mLocationRequest,
+                    locationCallback,
+                    null);
         }
 
         mAuth = FirebaseAuth.getInstance();
@@ -120,7 +124,6 @@ public class PostActivity extends AppCompatActivity {
         });
 
     }
-
 
     private void ValidatePostInfo() {
         Description = PostDescription.getText().toString();
