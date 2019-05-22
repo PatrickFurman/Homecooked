@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Nearby Pets"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <SearchView
+        android:id="@+id/searchBar"
+        android:layout_width="match_parent"
+        android:layout_height="35dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Spinner
+            android:id="@+id/filters"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:entries="@array/search_options" />
+
+        <Button
+            android:id="@+id/goToMaps"
+            android:layout_width="205dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/common_google_signin_btn_text_light"
+            android:text="Map View" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/list"
+        android:layout_width="420dp"
+        android:layout_height="479dp"
+        android:layout_gravity="fill"
+        android:stretchColumns="1"></ListView>
+
+</LinearLayout>

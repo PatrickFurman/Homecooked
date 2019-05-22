@@ -8,8 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,13 +25,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class FoodMap extends FragmentActivity implements OnMapReadyCallback {
+public class PetMap extends FragmentActivity implements OnMapReadyCallback {
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
@@ -48,7 +42,7 @@ public class FoodMap extends FragmentActivity implements OnMapReadyCallback {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_food_map);
+        setContentView(R.layout.activity_pet_map);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -61,35 +55,41 @@ public class FoodMap extends FragmentActivity implements OnMapReadyCallback {
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                View v = (View) marker.getTag();
-                usersRef.child(v.getTag(R.integer.Seller).toString()).addListenerForSingleValueEvent(
-                        new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                sellerEmail = dataSnapshot.child("email").getValue(String.class);
-                                sellerName = dataSnapshot.child("name").getValue(String.class);
-                            }
+                TextView v = (TextView) marker.getTag();
+                try {
+                    usersRef.child(v.getTag(R.integer.Seller).toString()).addListenerForSingleValueEvent(
+                            new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    sellerEmail = dataSnapshot.child("email").getValue(String.class);
+                                    sellerName = dataSnapshot.child("name").getValue(String.class);
+                                }
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-                                Toast.makeText(getApplicationContext(), "Seller email not found",
-                                        Toast.LENGTH_LONG).show();
-                            }
-                        });
-                if (sellerEmail == null)
-                    sellerEmail = "Error 404 Email not found";
-                if (sellerName == null)
-                    sellerName = "Error 404 Name not found";
-                Intent intent = new Intent(getApplicationContext(), ViewFoodDetails.class);
-                intent.putExtra("Food details", v.getTag(R.integer.Description).toString());
-                intent.putExtra("Food name", v.getTag(R.integer.Name).toString());
-                intent.putExtra("Seller name", sellerName);
-                intent.putExtra("Seller uid", v.getTag(R.integer.Seller).toString());
-                intent.putExtra("Seller email", sellerEmail);
-                intent.putExtra("PhotoKey", v.getTag(R.integer.PhotoKey).toString());
-                intent.putExtra("Post name", v.getTag(R.integer.Parent).toString());
-                startActivity(intent);
-               return false;
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                    Toast.makeText(getApplicationContext(), "Seller email not found",
+                                            Toast.LENGTH_LONG).show();
+                                }
+                            });
+                    if (sellerEmail == null)
+                        sellerEmail = "Error 404 Email not found";
+                    if (sellerName == null)
+                        sellerName = "Error 404 Name not found";
+                    Intent intent = new Intent(getApplicationContext(), ViewPetDetails.class);
+                    intent.putExtra("pet details", v.getTag(R.integer.Description).toString());
+                    intent.putExtra("pet name", v.getTag(R.integer.Name).toString());
+                    intent.putExtra("Seller name", sellerName);
+                    intent.putExtra("Seller uid", v.getTag(R.integer.Seller).toString());
+                    intent.putExtra("Seller email", sellerEmail);
+                    intent.putExtra("PhotoKey", v.getTag(R.integer.PhotoKey).toString());
+                    intent.putExtra("Post name", v.getTag(R.integer.Parent).toString());
+                    startActivity(intent);
+                } catch (Exception e) {
+                    Toast.makeText(getApplicationContext(), e.getMessage(),
+                            Toast.LENGTH_LONG).show();
+                    return false;
+                }
+               return true;
             }
         });
         if(ContextCompat.checkSelfPermission(this.getApplicationContext(),
@@ -126,10 +126,10 @@ public class FoodMap extends FragmentActivity implements OnMapReadyCallback {
                         view.setTag(R.integer.PhotoKey, "No photo found");
                     else
                         view.setTag(R.integer.PhotoKey, child.child("photoKey").getValue(String.class));
-                    if (child.child("foodName").getValue(String.class) == null)
+                    if (child.child("petName").getValue(String.class) == null)
                         view.setTag(R.integer.Name, "No name given");
                     else
-                        view.setTag(R.integer.Name, child.child("foodName").getValue(String.class));
+                        view.setTag(R.integer.Name, child.child("petName").getValue(String.class));
                     if (child.child("description").getValue(String.class) == null)
                         view.setTag(R.integer.Description, "No description given");
                     else
@@ -169,7 +169,7 @@ public class FoodMap extends FragmentActivity implements OnMapReadyCallback {
 
         LatLng currentLoc = new LatLng(47.568, -122.321);
         mMap.addMarker(new MarkerOptions().position(currentLoc).title("You are here"));
-        CameraUpdateFactory.zoomTo(5);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLoc));
+        CameraUpdateFactory.zoomTo(5);
     }
 }
