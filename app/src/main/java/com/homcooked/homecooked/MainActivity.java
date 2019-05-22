@@ -1,8 +1,10 @@
 package com.homcooked.homecooked;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.Button;
 
@@ -14,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button viewpetButton = (Button)findViewById(R.id.view_pet_button);
+        CardView viewpetButton = findViewById(R.id.view_pet_button);
         viewpetButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent i = new Intent(MainActivity.this, NearbyPets.class);
@@ -22,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button postpetButton = (Button)findViewById(R.id.post_pet_button);
+        CardView postpetButton = findViewById(R.id.post_pet_button);
         postpetButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent i = new Intent(MainActivity.this, PostActivity.class);
@@ -30,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button usersPostsButton = findViewById(R.id.users_posts_button);
+        CardView usersPostsButton = findViewById(R.id.users_posts_button);
         usersPostsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent i = new Intent(MainActivity.this, UsersPosts.class);
@@ -38,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button profileButton = findViewById(R.id.btnProfile);
+        @SuppressLint("WrongViewCast") CardView profileButton = findViewById(R.id.btnProfile);
         profileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

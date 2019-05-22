@@ -6,5 +6,6 @@
     <color name="lightBlue">#93ccea</color>
     <color name="lightBlue2">#7ec2e6</color>
     <color name="black">#000000</color>
+    <color name="lightGray">#ededed</color>
 
 </resources>
