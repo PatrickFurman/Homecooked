@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -12,6 +13,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -28,12 +32,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class PetMap extends FragmentActivity implements OnMapReadyCallback {
-    private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
-    private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-    private DatabaseReference usersRef = rootRef.child("Users");
+    private DatabaseReference usersRef = rootRef.child("Profile");
     private DatabaseReference postsRef = rootRef.child("Posts");
     private GoogleMap mMap;
+    Location mCurrentLocation;
+    LocationCallback mLocationCallback;
+    LocationRequest locationRequest;
     double latitude;
     double longitude;
     String sellerEmail;
@@ -47,6 +52,19 @@ public class PetMap extends FragmentActivity implements OnMapReadyCallback {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        locationRequest = new LocationRequest();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setNumUpdates(1);
+        mLocationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+                mCurrentLocation = locationResult.getLastLocation();
+                latitude = mCurrentLocation.getLatitude();
+                longitude = mCurrentLocation.getLongitude();
+            }
+        };
+        getLocation();
     }
 
     @Override
@@ -61,8 +79,8 @@ public class PetMap extends FragmentActivity implements OnMapReadyCallback {
                             new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    sellerEmail = dataSnapshot.child("email").getValue(String.class);
-                                    sellerName = dataSnapshot.child("name").getValue(String.class);
+                                    sellerEmail = dataSnapshot.child("profile_email").getValue(String.class);
+                                    sellerName = dataSnapshot.child("profile_name").getValue(String.class);
                                 }
 
                                 @Override
@@ -92,31 +110,6 @@ public class PetMap extends FragmentActivity implements OnMapReadyCallback {
                return true;
             }
         });
-        if(ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                        FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            try {
-                mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-                mFusedLocationClient.getLastLocation()
-                        .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                            @Override
-                            public void onSuccess(Location location) {
-                                // Got last known location. In some rare situations this can be null.
-                                if (location != null) {
-                                    latitude = location.getLatitude();
-                                    longitude = location.getLongitude();
-                                } else {
-                                    Toast.makeText(getApplicationContext(), R.string.location_error,
-                                            Toast.LENGTH_LONG).show();
-                                }
-                            }
-                        });
-            } catch (Exception e) {
-                Toast.makeText(getApplicationContext(), R.string.error + e.getMessage(),
-                        Toast.LENGTH_LONG).show();
-            }
-        }
         postsRef.orderByChild("latitude").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -168,8 +161,40 @@ public class PetMap extends FragmentActivity implements OnMapReadyCallback {
         });
 
         LatLng currentLoc = new LatLng(47.568, -122.321);
-        mMap.addMarker(new MarkerOptions().position(currentLoc).title("You are here"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLoc));
-        CameraUpdateFactory.zoomTo(5);
+        CameraUpdateFactory.zoomTo(15);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    getLocation();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Not all features of this app will work without" +
+                            " location services turned on", Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
+        }
+    }
+
+    private void getLocation() {
+        if(ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        } else {
+            try {
+                mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+                mFusedLocationClient.requestLocationUpdates(locationRequest, mLocationCallback, null);
+            } catch (Exception e) {
+                Toast.makeText(getApplicationContext(), R.string.error + e.getMessage(),
+                        Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }

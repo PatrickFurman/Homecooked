@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,11 +38,10 @@ public class ViewPetDetails extends AppCompatActivity {
         pet_description = findViewById(R.id.post_description);
         email = findViewById(R.id.email);
         pet_image = findViewById(R.id.post_image);
-        seller = new User(i.getStringExtra("Seller name"), i.getStringExtra("Seller email"));
-        seller.setUserId(i.getStringExtra("Seller uid"));
         // retrieving info on what to display
         String description = "Name: " + i.getStringExtra("pet name") + "\nDescription: " +
                 i.getStringExtra("pet details");
+        email.setText("Seller name: " + i.getStringExtra("Seller name") + "\nSeller email: " + i.getStringExtra("Seller email"));
         storageRef.child("Post Images").child(i.getStringExtra("PhotoKey")).getBytes(1024*1024*7)
                 .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                     @Override
@@ -59,6 +59,5 @@ public class ViewPetDetails extends AppCompatActivity {
 
         // updating layout
         pet_description.setText(description);
-        email.setText("Seller name: " + seller.getName() + "\nSeller email: " + seller.getEmail());
     }
 }
