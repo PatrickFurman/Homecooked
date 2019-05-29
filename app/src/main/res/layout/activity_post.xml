@@ -25,7 +25,8 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/upload_picture" />
+        app:srcCompat="@drawable/upload_image"
+        android:background="@null"/>
 
     <EditText
         android:id="@+id/post_description"
@@ -37,7 +38,7 @@
         android:layout_marginEnd="17dp"
         android:layout_marginRight="17dp"
         android:ems="10"
-        android:hint="Description (what you are cooking/can cook, allergy warnings, etc)"
+        android:hint="Description"
         android:inputType="textMultiLine"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -45,31 +46,30 @@
 
     <Button
         android:id="@+id/upload_post_button"
-        android:layout_width="wrap_content"
+        android:layout_width="254dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="148dp"
-        android:layout_marginLeft="148dp"
         android:layout_marginTop="50dp"
         android:layout_marginEnd="148dp"
-        android:layout_marginRight="148dp"
         android:layout_marginBottom="31dp"
+        android:background="@drawable/button_rounded"
         android:text="Post"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/post_description" />
+        app:layout_constraintTop_toBottomOf="@+id/post_description"
+        app:layout_constraintVertical_bias="0.0" />
 
     <EditText
         android:id="@+id/pet_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="29dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="140dp"
         android:layout_marginBottom="10dp"
         android:ems="10"
-        android:hint="Title/Food Name"
+        android:hint="Pet Name"
         android:inputType="textMultiLine"
         app:layout_constraintBottom_toTopOf="@+id/post_description"
         app:layout_constraintEnd_toEndOf="parent"
