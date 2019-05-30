@@ -31,7 +31,7 @@
 
         <Button
             android:id="@+id/goToMaps"
-            android:layout_width="205dp"
+            android:layout_width="186dp"
             android:layout_height="wrap_content"
             android:background="@drawable/common_google_signin_btn_text_light"
             android:text="Map View" />

@@ -213,8 +213,8 @@ public class NearbyPets extends AppCompatActivity {
                                 new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                        sellerEmail = dataSnapshot.child("profile_email").getValue(String.class);
-                                        sellerName = dataSnapshot.child("profile_name").getValue(String.class);
+                                        sellerEmail = dataSnapshot.child("profile_email").getValue().toString();
+                                        sellerName = dataSnapshot.child("profile_name").getValue().toString();
                                     }
 
                                     @Override
