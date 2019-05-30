@@ -24,6 +24,7 @@ public class Profile_Edit_Activity extends AppCompatActivity implements View.OnC
     EditText user_location;
     EditText user_phone;
     EditText user_description;
+    EditText user_web;
     Button btnSave;
 
     String profile_name;
@@ -31,6 +32,7 @@ public class Profile_Edit_Activity extends AppCompatActivity implements View.OnC
     String profile_location;
     String profile_phone;
     String profile_description;
+    String profile_web;
     String currentUser;
 
     @Override
@@ -60,8 +62,13 @@ public class Profile_Edit_Activity extends AppCompatActivity implements View.OnC
                 profile_phone = user_phone.getText().toString();
                 user_description = findViewById(R.id.user_description);
                 profile_description = user_description.getText().toString();
+                user_web = findViewById(R.id.user_web);
+                profile_web = user_web.getText().toString();
+                if(profile_web == null){
+                    profile_web = "No Website";
+                }
 
-                profileRef.child(currentUser).setValue(new Profile(profile_name, profile_email, profile_location, profile_phone, profile_description ));
+                profileRef.child(currentUser).setValue(new Profile(profile_name, profile_email, profile_location, profile_phone, profile_description, profile_web ));
 
                 Intent intent = new Intent(Profile_Edit_Activity.this, MainActivity.class);
                 startActivity(intent);

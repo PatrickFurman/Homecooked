@@ -10,17 +10,19 @@ public class Profile {
     private String profile_description;
     //phone number int or string?
     private String profile_phone;
+    private String profile_web;
 
-    public Profile(String profile_name, String profile_email, String profile_location, Editable profile_phone, String profile_description) {
+    public Profile(String profile_name, String profile_email, String profile_location, Editable profile_phone, String profile_description, String profile_web) {
 
     }
 
-    public Profile(String profile_name, String profile_email, String profile_location, String profile_phone, String profile_description) {
+    public Profile(String profile_name, String profile_email, String profile_location, String profile_phone, String profile_description, String profile_web) {
         this.profile_name = profile_name;
         this.profile_email = profile_email;
         this.profile_location = profile_location;
         this.profile_phone = profile_phone;
         this.profile_description = profile_description;
+        this.profile_web = profile_web;
     }
 
     public String getProfile_name() {
@@ -61,5 +63,11 @@ public class Profile {
 
     public void setProfile_description(String profile_description){
         this.profile_description = profile_description;
+    }
+
+    public String getProfile_web(){ return profile_web; }
+
+    public void setProfile_web(String profile_web){
+        this.profile_web = profile_web;
     }
 }

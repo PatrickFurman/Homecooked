@@ -17,7 +17,7 @@ import com.google.firebase.database.ValueEventListener;
 public class View_Profile_Activity extends AppCompatActivity {
 
     String id;
-    TextView profile_name, profile_email, profile_location, profile_description, profile_phone;
+    TextView profile_name, profile_email, profile_location, profile_description, profile_phone, profile_web;
 
     private DatabaseReference mDatabaseRef, userRef;
     private FirebaseAuth auth;
@@ -35,6 +35,7 @@ public class View_Profile_Activity extends AppCompatActivity {
         profile_location = findViewById(R.id.profile_location);
         profile_description = findViewById(R.id.profile_description);
         profile_phone = findViewById(R.id.phone);
+        profile_web = findViewById(R.id.website);
 
         auth = FirebaseAuth.getInstance();
         mDatabaseRef = FirebaseDatabase.getInstance().getReference();
@@ -48,11 +49,13 @@ public class View_Profile_Activity extends AppCompatActivity {
                 String location = dataSnapshot.child("profile_location").getValue().toString();
                 String description = dataSnapshot.child("profile_description").getValue().toString();
                 String phone = dataSnapshot.child("profile_phone").getValue().toString();
+                String web = dataSnapshot.child("profile_web").getValue().toString();
                 profile_phone.setText(phone);
                 profile_description.setText(description);
                 profile_location.setText(location);
                 profile_name.setText(name);
                 profile_email.setText(email);
+                profile_web.setText(web);
             }
 
             @Override

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,8 +25,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     TextView profile_location;
     TextView profile_description;
     TextView profile_phone;
-//add phone number, location, and description
-    Button btnEdit;
+    TextView profile_web;
+    CardView btnEdit;
 
     private FirebaseDatabase mDatabase;
     private DatabaseReference mDatabaseRef, userRef;
@@ -42,6 +43,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         profile_location = findViewById(R.id.profile_location);
         profile_description = findViewById(R.id.profile_description);
         profile_phone = findViewById(R.id.phone);
+        profile_web = findViewById(R.id.website);
 
         btnEdit = findViewById(R.id.btnEdit);
         btnEdit.setOnClickListener(this);
@@ -59,11 +61,13 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 String location = dataSnapshot.child("profile_location").getValue().toString();
                 String description = dataSnapshot.child("profile_description").getValue().toString();
                 String phone = dataSnapshot.child("profile_phone").getValue().toString();
+                String web = dataSnapshot.child("profile_web").getValue().toString();
                 profile_phone.setText(phone);
                 profile_description.setText(description);
                 profile_location.setText(location);
                 profile_name.setText(name);
                 profile_email.setText(email);
+                profile_web.setText(web);
             }
 
             @Override
