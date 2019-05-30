@@ -39,6 +39,7 @@
         <activity android:name=".DeletePost" />
         <activity android:name=".FeedbackActivity" />
         <activity android:name=".ViewReviews" />
+        <activity android:name=".PetMap" />
         <activity android:name=".View_Profile_Activity"></activity>
 =======
         <!--

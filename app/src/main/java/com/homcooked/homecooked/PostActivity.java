@@ -1,12 +1,15 @@
 package com.homcooked.homecooked;
 
 import android.Manifest;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -18,7 +21,12 @@ import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -34,6 +42,8 @@ import com.google.firebase.storage.UploadTask;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+
+import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
 public class PostActivity extends AppCompatActivity {
 
@@ -54,8 +64,10 @@ public class PostActivity extends AppCompatActivity {
     private StorageReference PostsImagesReference;
     private DatabaseReference UsersRef, PostsRef;
     private FirebaseAuth mAuth;
-    private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
+    private Location mCurrentLocation;
+    private LocationCallback mLocationCallback;
+    private LocationRequest locationRequest;
     private FusedLocationProviderClient mFusedLocationClient;
 
     private String saveCurrentDate, saveCurrentTime, postRandomName, downloadUrl, current_user_id, userName, photoKey;
@@ -66,31 +78,19 @@ public class PostActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
 
-        if(ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                        FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            try {
-                mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-                mFusedLocationClient.getLastLocation()
-                        .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                            @Override
-                            public void onSuccess(Location location) {
-                                // Got last known location. In some rare situations this can be null.
-                                if (location != null) {
-                                    latitude = location.getLatitude();
-                                    longitude = location.getLongitude();
-                                } else {
-                                    Toast.makeText(getApplicationContext(), R.string.location_error,
-                                            Toast.LENGTH_LONG).show();
-                                }
-                            }
-                        });
-            } catch (Exception e) {
-                Toast.makeText(getApplicationContext(), R.string.error + e.getMessage(),
-                        Toast.LENGTH_LONG).show();
+        locationRequest = new LocationRequest();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setNumUpdates(1);
+        mLocationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+                mCurrentLocation = locationResult.getLastLocation();
+                latitude = mCurrentLocation.getLatitude();
+                longitude = mCurrentLocation.getLongitude();
             }
-        }
+        };
+        getLocation();
 
         mAuth = FirebaseAuth.getInstance();
         current_user_id = mAuth.getCurrentUser().getUid();
@@ -120,7 +120,6 @@ public class PostActivity extends AppCompatActivity {
         });
 
     }
-
 
     private void ValidatePostInfo() {
         Description = PostDescription.getText().toString();
@@ -246,6 +245,40 @@ public class PostActivity extends AppCompatActivity {
     private void SendUserToNearbypets() {
         Intent nearbypetsIntent = new Intent (PostActivity.this, NearbyPets.class);
         startActivity(nearbypetsIntent);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    getLocation();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Not all features of this app will work without" +
+                            " location services turned on", Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
+        }
+    }
+
+    private void getLocation() {
+        if(ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        } else {
+            try {
+                mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+                mFusedLocationClient.requestLocationUpdates(locationRequest, mLocationCallback, null);
+            } catch (Exception e) {
+                Toast.makeText(getApplicationContext(), R.string.error + e.getMessage(),
+                        Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
 }

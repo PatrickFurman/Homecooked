@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,6 +21,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -36,11 +40,9 @@ import static android.view.View.TEXT_ALIGNMENT_CENTER;
 import static android.view.View.generateViewId;
 
 public class NearbyPets extends AppCompatActivity {
-    private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
-    private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
     private DatabaseReference postsRef = rootRef.child("Posts");
-    private DatabaseReference usersRef = rootRef.child("Users");
+    private DatabaseReference usersRef = rootRef.child("Profile");
     TextView loadMoreButton;
     ListView lv;
     Spinner spinner;
@@ -51,6 +53,9 @@ public class NearbyPets extends AppCompatActivity {
     String sellerName;
     String sortType;
 
+    Location mCurrentLocation;
+    LocationCallback mLocationCallback;
+    LocationRequest locationRequest;
     double latitude;
     double longitude;
     private FusedLocationProviderClient mFusedLocationClient;
@@ -58,31 +63,19 @@ public class NearbyPets extends AppCompatActivity {
     protected  void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nearby_pets);
-        if(ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                        FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            try {
-                mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-                mFusedLocationClient.getLastLocation()
-                        .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                            @Override
-                            public void onSuccess(Location location) {
-                                // Got last known location. In some rare situations this can be null.
-                                if (location != null) {
-                                    latitude = location.getLatitude();
-                                    longitude = location.getLongitude();
-                                } else {
-                                    Toast.makeText(getApplicationContext(), R.string.location_error,
-                                            Toast.LENGTH_LONG).show();
-                                }
-                            }
-                        });
-            } catch (Exception e) {
-                Toast.makeText(getApplicationContext(), R.string.error + e.getMessage(),
-                        Toast.LENGTH_LONG).show();
+        locationRequest = new LocationRequest();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setNumUpdates(1);
+        mLocationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+                mCurrentLocation = locationResult.getLastLocation();
+                latitude = mCurrentLocation.getLatitude();
+                longitude = mCurrentLocation.getLongitude();
             }
-        }
+        };
+        getLocation();
         textViewList = new ArrayList<>();
         spinner = findViewById(R.id.filters);
         searchBar = findViewById(R.id.searchBar);
@@ -145,6 +138,7 @@ public class NearbyPets extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), PetMap.class);
+                finish();
                 startActivity(intent);
             }
         });
@@ -219,8 +213,8 @@ public class NearbyPets extends AppCompatActivity {
                                 new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                        sellerEmail = dataSnapshot.child("email").getValue(String.class);
-                                        sellerName = dataSnapshot.child("name").getValue(String.class);
+                                        sellerEmail = dataSnapshot.child("profile_email").getValue().toString();
+                                        sellerName = dataSnapshot.child("profile_name").getValue().toString();
                                     }
 
                                     @Override
@@ -344,5 +338,39 @@ public class NearbyPets extends AppCompatActivity {
                         databaseError.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    getLocation();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Not all features of this app will work without" +
+                                    " location services turned on", Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
+        }
+    }
+
+    private void getLocation() {
+        if(ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        } else {
+            try {
+                mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+                mFusedLocationClient.requestLocationUpdates(locationRequest, mLocationCallback, null);
+            } catch (Exception e) {
+                Toast.makeText(getApplicationContext(), R.string.error + e.getMessage(),
+                        Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }
