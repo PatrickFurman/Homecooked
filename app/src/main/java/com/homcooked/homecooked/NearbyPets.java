@@ -209,24 +209,6 @@ public class NearbyPets extends AppCompatActivity {
                                             long id) {
                         TextView v = textViewList.get(position);
                         Intent intent = new Intent(getApplicationContext(), ViewPetDetails.class);
-                        usersRef.child(v.getTag(R.integer.Seller).toString()).addListenerForSingleValueEvent(
-                                new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                        sellerEmail = dataSnapshot.child("profile_email").getValue().toString();
-                                        sellerName = dataSnapshot.child("profile_name").getValue().toString();
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                                        Toast.makeText(getApplicationContext(), "Seller email not found",
-                                                Toast.LENGTH_LONG).show();
-                                    }
-                                });
-                        if (sellerEmail == null)
-                            sellerEmail = "Error 404 Email not found";
-                        if (sellerName == null)
-                            sellerName = "Error 404 Name not found";
                         intent.putExtra("pet details", v.getTag(R.integer.Description).toString());
                         intent.putExtra("pet name", v.getTag(R.integer.Name).toString());
                         intent.putExtra("Seller name", sellerName);

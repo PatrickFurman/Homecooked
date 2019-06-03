@@ -14,11 +14,17 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 public class ViewPetDetails extends AppCompatActivity {
     StorageReference storageRef;
+    private DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("Profile");
     User seller;
     String postName;
     Intent intent;
@@ -41,7 +47,20 @@ public class ViewPetDetails extends AppCompatActivity {
         // retrieving info on what to display
         String description = "Name: " + i.getStringExtra("pet name") + "\nDescription: " +
                 i.getStringExtra("pet details");
-        email.setText("Seller name: " + i.getStringExtra("Seller name") + "\nSeller email: " + i.getStringExtra("Seller email"));
+        usersRef.child(i.getStringExtra("Seller uid")).addValueEventListener(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        email.setText("Seller name: "+ dataSnapshot.child("profile_email").getValue().toString() + "\nSeller email: " +
+                                dataSnapshot.child("profile_name").getValue().toString());
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Toast.makeText(getApplicationContext(), "Seller email not found",
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
         storageRef.child("Post Images").child(i.getStringExtra("PhotoKey")).getBytes(1024*1024*7)
                 .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                     @Override

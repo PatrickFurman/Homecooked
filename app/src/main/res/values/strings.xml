@@ -25,6 +25,7 @@
         <item>Location</item>
         <item>Time</item>
     </string-array>
+    <string name="Loading">Loading...</string>
     <![CDATA[
 =======
     <string name="title_activity_food_map">Map</string><![CDATA[
