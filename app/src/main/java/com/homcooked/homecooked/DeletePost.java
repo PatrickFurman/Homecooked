@@ -16,14 +16,18 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 public class DeletePost extends AppCompatActivity {
     StorageReference storageRef;
     private DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+    private DatabaseReference usersRef = rootRef.child("Profile");
     private DatabaseReference postRef = rootRef.child("Posts");
     private DatabaseReference DeletedPostsRef = rootRef.child("Deleted Posts");
     // getting views from layout
@@ -66,9 +70,20 @@ public class DeletePost extends AppCompatActivity {
         });
         // updating layout
         pet_description.setText(description);
-        email.setText(sellerEmail);
-
         currentUserID = intent.getStringExtra("uid");
+        usersRef.child(currentUserID).addValueEventListener(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        email.setText("Seller email: " + dataSnapshot.child("profile_email").getValue().toString());
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Toast.makeText(getApplicationContext(), "Seller email not found",
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
         String photokey = intent.getStringExtra("PhotoKey").substring(2);
         String tempPostID = currentUserID + photokey;
         postID = tempPostID.substring(0, tempPostID.length() - 4);

@@ -51,8 +51,8 @@ public class ViewPetDetails extends AppCompatActivity {
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        email.setText("Seller name: "+ dataSnapshot.child("profile_email").getValue().toString() + "\nSeller email: " +
-                                dataSnapshot.child("profile_name").getValue().toString());
+                        email.setText("Seller name: "+ dataSnapshot.child("profile_name").getValue().toString() + "\nSeller email: " +
+                                dataSnapshot.child("profile_email").getValue().toString());
                     }
 
                     @Override
