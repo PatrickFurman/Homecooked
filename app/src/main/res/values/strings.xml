@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BFFur-ever</string>
+    <string name="app_name">Lonely Pets 4U</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="sign_up">Sign Up</string>
@@ -25,6 +25,7 @@
         <item>Location</item>
         <item>Time</item>
     </string-array>
+    <string name="Loading">Loading...</string>
     <![CDATA[
 =======
     <string name="title_activity_food_map">Map</string><![CDATA[
