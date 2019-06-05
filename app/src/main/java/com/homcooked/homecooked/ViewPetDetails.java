@@ -33,6 +33,7 @@ public class ViewPetDetails extends AppCompatActivity {
     TextView email;
     ImageView pet_image;
     Button btnView;
+    String uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,13 +47,10 @@ public class ViewPetDetails extends AppCompatActivity {
         email = findViewById(R.id.email);
         pet_image = findViewById(R.id.post_image);
         btnView = findViewById(R.id.btnView);
+        uid = i.getStringExtra("Seller uid");
         // retrieving info on what to display
         String description = "Name: " + i.getStringExtra("pet name") + "\nDescription: " +
                 i.getStringExtra("pet details");
-<<<<<<< HEAD
-        email.setText("Seller name: " + i.getStringExtra("Seller name") + "\nSeller email: " + i.getStringExtra("Seller email"));
-        storageRef.child("Post Images").child(i.getStringExtra("PhotoKey")).getBytes(1024 * 1024 * 7)
-=======
         usersRef.child(i.getStringExtra("Seller uid")).addValueEventListener(
                 new ValueEventListener() {
                     @Override
@@ -68,7 +66,6 @@ public class ViewPetDetails extends AppCompatActivity {
                     }
                 });
         storageRef.child("Post Images").child(i.getStringExtra("PhotoKey")).getBytes(1024*1024*7)
->>>>>>> 44625d050d91bdc303c5574431b806baef0bf516
                 .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                     @Override
                     public void onSuccess(byte[] bytes) {
@@ -87,11 +84,12 @@ public class ViewPetDetails extends AppCompatActivity {
         pet_description.setText(description);
 
 
-        btnView.setOnClickListener(new View.OnClickListener() {
 
+        findViewById(R.id.btnView).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(ViewPetDetails.this, View_Profile_Activity.class);
+                i.putExtra("uid", uid);
                 startActivity(i);
             }
     });

@@ -28,7 +28,7 @@ public class View_Profile_Activity extends AppCompatActivity {
         setContentView(R.layout.activity_view__profile_);
 
         Intent intent = getIntent();
-        id = intent.getStringExtra("Seller uid");
+        id = intent.getStringExtra("uid");
 
 
         profile_name = findViewById(R.id.name);
