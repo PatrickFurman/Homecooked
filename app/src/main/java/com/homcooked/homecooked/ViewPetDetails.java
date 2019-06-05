@@ -26,6 +26,7 @@ public class ViewPetDetails extends AppCompatActivity {
     TextView pet_description;
     TextView email;
     ImageView pet_image;
+    Button btnView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +39,12 @@ public class ViewPetDetails extends AppCompatActivity {
         pet_description = findViewById(R.id.post_description);
         email = findViewById(R.id.email);
         pet_image = findViewById(R.id.post_image);
+        btnView = findViewById(R.id.btnView);
         // retrieving info on what to display
         String description = "Name: " + i.getStringExtra("pet name") + "\nDescription: " +
                 i.getStringExtra("pet details");
         email.setText("Seller name: " + i.getStringExtra("Seller name") + "\nSeller email: " + i.getStringExtra("Seller email"));
-        storageRef.child("Post Images").child(i.getStringExtra("PhotoKey")).getBytes(1024*1024*7)
+        storageRef.child("Post Images").child(i.getStringExtra("PhotoKey")).getBytes(1024 * 1024 * 7)
                 .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                     @Override
                     public void onSuccess(byte[] bytes) {
@@ -59,5 +61,15 @@ public class ViewPetDetails extends AppCompatActivity {
 
         // updating layout
         pet_description.setText(description);
+
+
+        btnView.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(ViewPetDetails.this, View_Profile_Activity.class);
+                startActivity(i);
+            }
+    });
     }
 }

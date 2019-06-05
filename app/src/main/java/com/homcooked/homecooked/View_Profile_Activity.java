@@ -30,6 +30,7 @@ public class View_Profile_Activity extends AppCompatActivity {
         Intent intent = getIntent();
         id = intent.getStringExtra("Seller uid");
 
+
         profile_name = findViewById(R.id.name);
         profile_email = findViewById(R.id.email);
         profile_location = findViewById(R.id.profile_location);
