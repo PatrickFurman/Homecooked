@@ -1,4 +1,4 @@
-# Homecooked
+# Lonely Pets 4U
 
 Rebranded to Lonely Pets 4U
 Intended to be an android app to connect pet owners who cannot take care of their pets and pet shelters to prospective pet owners who are looking to adopt.
